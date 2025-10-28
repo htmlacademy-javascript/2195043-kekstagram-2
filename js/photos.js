@@ -1,5 +1,5 @@
-import { getRandomInt, getRandomArrayItem } from "./utils.js";
-import { generateCommentsArray } from "./comments.js";
+import { getRandomInt, getRandomArrayItem } from './utils.js';
+import { generateCommentsArray } from './comments.js';
 
 export const createPhoto = ({ id, config }) => {
   const minLikes = 15;

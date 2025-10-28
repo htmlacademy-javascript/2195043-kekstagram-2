@@ -1,4 +1,4 @@
-import { getRandomInt, getRandomArrayItem } from "./utils.js";
+import { getRandomInt, getRandomArrayItem } from './utils.js';
 
 export const getRandomMessage = (arr) => {
   const minCountMessage = 1;
