@@ -1,6 +1,11 @@
 import { CONFIG } from './config.js';
-import { generatePhotoArray } from './photos.js';
+import { createPictureCollection } from './pictures.js';
+import {renderPictures} from './render-pictures.js';
 
-const PHOTO_ARRAY_SIZE = 25;
+const PICTURES_COUNT = 25;
 
-generatePhotoArray({ size: PHOTO_ARRAY_SIZE, config: CONFIG });
+const pictureTemplateElement = document.querySelector('#picture')?.content?.querySelector('.picture');
+const picturesContainerElement = document.querySelector('.pictures');
+
+const pictures = createPictureCollection({ count: PICTURES_COUNT, config: CONFIG });
+renderPictures(pictures, pictureTemplateElement, picturesContainerElement);
