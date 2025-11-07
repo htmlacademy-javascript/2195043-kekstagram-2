@@ -14,16 +14,12 @@ export const renderPictures = (pictures, templateElement, containerElement) => {
     return;
   }
 
-  if (!Array.isArray(pictures)) {
+  if (!Array.isArray(pictures) || pictures.length === 0) {
     return;
   }
 
   const existingPictures = containerElement.querySelectorAll('.picture');
   existingPictures.forEach((picture) => picture.remove());
-
-  if (pictures.length === 0) {
-    return;
-  }
 
   const fragment = document.createDocumentFragment();
   pictures
