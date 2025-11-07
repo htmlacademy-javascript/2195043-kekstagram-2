@@ -5,15 +5,23 @@ export const getRandomMessage = (arr) => {
   const maxCountMessage = 2;
   const countMessage = getRandomInt(minCountMessage, maxCountMessage);
 
-  return Array.from({ length: countMessage }, () => getRandomArrayItem(arr));
+  return Array.from({ length: countMessage }, () => {
+    const result = getRandomArrayItem(arr);
+    return result.ok ? result.value : '';
+  });
 };
 
-export const createComment = ({ id, config }) => ({
-  id: id + 1,
-  avatar: `img/avatar-${getRandomInt(1, 6)}.svg`,
-  message: getRandomMessage(config.comments),
-  name: getRandomArrayItem(config.names),
-});
+export const createComment = ({ id, config }) => {
+  const nameResult = getRandomArrayItem(config.names);
+  const name = nameResult.ok ? nameResult.value : 'Анонимный пользователь';
+
+  return {
+    id: id + 1,
+    avatar: `img/avatar-${getRandomInt(1, 6)}.svg`,
+    message: getRandomMessage(config.comments),
+    name,
+  };
+};
 
 export const generateCommentsArray = (config) => {
   const minComments = 0;
