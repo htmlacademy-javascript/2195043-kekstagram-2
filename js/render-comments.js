@@ -20,7 +20,9 @@ const buildCommentNode = (comment) => {
   return commentElement;
 };
 
-export const renderComments = (comments, containerElement) => {
+const COMMENTS_PER_PAGE = 5;
+
+export const renderComments = (comments, containerElement, startIndex = 0) => {
   if (!containerElement) {
     return failure('Отсутствует контейнер для комментариев');
   }
@@ -29,16 +31,16 @@ export const renderComments = (comments, containerElement) => {
     return failure('Некорректный массив комментариев');
   }
 
-  const existingComments = containerElement.querySelectorAll('.social__comment');
-  existingComments.forEach((comment) => comment.remove());
+  const endIndex = startIndex + COMMENTS_PER_PAGE;
+  const commentsToRender = comments.slice(startIndex, endIndex);
 
   const fragment = document.createDocumentFragment();
-  comments
+  commentsToRender
     .map((comment) => buildCommentNode(comment))
     .forEach((node) => fragment.append(node));
 
   containerElement.append(fragment);
 
-  return success(containerElement);
+  return success({ container: containerElement, renderedCount: endIndex });
 };
 

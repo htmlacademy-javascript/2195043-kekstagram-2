@@ -7,6 +7,8 @@ const closeButtonElement = modalWindow.querySelector('.big-picture__cancel');
 const commentsContainer = modalWindow.querySelector('.social__comments');
 const commentCountElement = modalWindow.querySelector('.social__comment-count');
 const commentsLoaderElement = modalWindow.querySelector('.comments-loader');
+const commentShownCountElement = modalWindow.querySelector('.social__comment-shown-count');
+const commentTotalCountElement = modalWindow.querySelector('.social__comment-total-count');
 
 const hideModal = () => {
   modalWindow.classList.add('hidden');
@@ -51,6 +53,34 @@ const createCloseHandler = () => {
 
 const { handleClose, handleKeydown, handleOverlayClick } = createCloseHandler();
 
+const createCommentsLoader = (comments) => {
+  let renderedCount = 0;
+  const totalCount = comments.length;
+
+  const updateCounter = () => {
+    if (commentShownCountElement) {
+      commentShownCountElement.textContent = renderedCount;
+    }
+    if (commentTotalCountElement) {
+      commentTotalCountElement.textContent = totalCount;
+    }
+  };
+
+  const loadMore = () => {
+    const result = renderComments(comments, commentsContainer, renderedCount);
+    if (result.ok) {
+      renderedCount = result.value.renderedCount;
+      updateCounter();
+
+      if (renderedCount >= totalCount && commentsLoaderElement) {
+        commentsLoaderElement.classList.add('hidden');
+      }
+    }
+  };
+
+  return { loadMore, updateCounter };
+};
+
 export const openModalWindow = (url, description, likes, comments) => {
   modalWindow.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
@@ -60,17 +90,28 @@ export const openModalWindow = (url, description, likes, comments) => {
   modalWindow.querySelector('.social__caption').textContent = description;
 
   if (comments && commentsContainer) {
-    const commentsCount = comments.length;
-    modalWindow.querySelector('.social__comment-shown-count').textContent = commentsCount;
-    modalWindow.querySelector('.social__comment-total-count').textContent = commentsCount;
-    renderComments(comments, commentsContainer);
-  }
+    const existingComments = commentsContainer.querySelectorAll('.social__comment');
+    existingComments.forEach((comment) => comment.remove());
 
-  if (commentCountElement) {
-    commentCountElement.classList.add('hidden');
-  }
-  if (commentsLoaderElement) {
-    commentsLoaderElement.classList.add('hidden');
+    if (commentCountElement) {
+      commentCountElement.classList.remove('hidden');
+    }
+    if (commentsLoaderElement) {
+      commentsLoaderElement.classList.remove('hidden');
+    }
+
+    const commentsLoader = createCommentsLoader(comments);
+    commentsLoader.loadMore();
+
+    const handleLoadMore = () => {
+      commentsLoader.loadMore();
+    };
+
+    if (commentsLoaderElement.currentHandler) {
+      commentsLoaderElement.removeEventListener('click', commentsLoaderElement.currentHandler);
+    }
+    commentsLoaderElement.currentHandler = handleLoadMore;
+    commentsLoaderElement.addEventListener('click', handleLoadMore);
   }
 
   addKeyboardListener(handleKeydown);
