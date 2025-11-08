@@ -24,3 +24,7 @@ export const getDataAttributeFromEvent = (event, attributeName) => {
   
   return success(attributeValue);
 };
+
+export const isEscapeKey = (event) => {
+  return event.key === 'Escape';
+}
