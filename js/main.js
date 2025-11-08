@@ -36,8 +36,8 @@ if (picturesRenderResult.ok) {
       return;
     }
 
-    const { url, description, likes } = picture;
-    openModalWindow(url, description, likes);
+    const { url, description, likes, comments } = picture;
+    openModalWindow(url, description, likes, comments);
   });
 } else {
   throw new Error(picturesRenderResult.error);
