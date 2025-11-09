@@ -15,16 +15,14 @@ export const getDataAttributeFromEvent = (event, attributeName) => {
   if (!event || !event.target) {
     return failure('Событие или целевой элемент отсутствует');
   }
-  
+
   const attributeValue = event.target.getAttribute(attributeName);
-  
+
   if (attributeValue === null) {
     return failure('Атрибут не найден');
   }
-  
+
   return success(attributeValue);
 };
 
-export const isEscapeKey = (event) => {
-  return event.key === 'Escape';
-}
+export const isEscapeKey = (event) => event.key === 'Escape';
