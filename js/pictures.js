@@ -5,10 +5,13 @@ export const createPicture = ({ id, config }) => {
   const minLikes = 15;
   const maxLikes = 200;
 
+  const descriptionResult = getRandomArrayItem(config.descriptions);
+  const description = descriptionResult.ok ? descriptionResult.value : 'Описание отсутствует';
+
   return {
     id: id + 1,
     url: `photos/${id + 1}.jpg`,
-    description: getRandomArrayItem(config.descriptions),
+    description,
     likes: getRandomInt(minLikes, maxLikes),
     comments: generateCommentsArray(config),
   };
