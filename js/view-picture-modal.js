@@ -17,9 +17,9 @@ const closeModal = () => {
   controller?.abort();
 };
 
-const handleKeydown = (keyboardEvent) => {
-  if (isEscapeKey(keyboardEvent)) {
-    keyboardEvent.preventDefault();
+const handleKeydown = (event) => {
+  if (isEscapeKey(event)) {
+    event.preventDefault();
     closeModal();
   }
 };
@@ -30,9 +30,9 @@ const handleCloseButtonClick = (event) => {
 };
 
 const setupModalContent = (url, description, likes) => {
-  const img = modalElement.querySelector('img');
-  const likesCount = modalElement.querySelector('.likes-count');
-  const caption = modalElement.querySelector('.social__caption');
+  const img = modalElement?.querySelector('img');
+  const likesCount = modalElement?.querySelector('.likes-count');
+  const caption = modalElement?.querySelector('.social__caption');
 
   if (img) {
     img.src = url;

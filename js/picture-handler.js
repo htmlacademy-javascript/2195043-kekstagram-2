@@ -1,4 +1,4 @@
-import { openPictureModal } from './modal-window.js';
+import { openPictureModal } from './view-picture-modal.js';
 
 export const initPictureModal = (pictures, containerElement) => {
   if (!containerElement) {
