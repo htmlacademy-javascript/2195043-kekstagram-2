@@ -41,6 +41,8 @@ export const renderComments = (comments, containerElement, startIndex = 0) => {
 
   containerElement.append(fragment);
 
-  return success({ container: containerElement, renderedCount: endIndex });
+  const renderedCount = startIndex + commentsToRender.length;
+
+  return success({ container: containerElement, renderedCount });
 };
 
