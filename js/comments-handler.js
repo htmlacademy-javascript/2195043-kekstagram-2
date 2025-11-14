@@ -25,7 +25,7 @@ class CommentsPaginator {
   renderNextPage = () => {
     const { container, loaderButton } = this.#elements;
     const result = renderComments(this.#comments, container, this.#renderedCount);
-    
+
     if (result.ok) {
       this.#renderedCount = result.value.renderedCount;
       this.#updateCounter();
@@ -40,7 +40,7 @@ class CommentsPaginator {
 const toggleCommentsUI = (elements, show) => {
   const { counterBlock, loaderButton } = elements;
   const method = show ? 'remove' : 'add';
-  
+
   if (counterBlock) {
     counterBlock.classList[method]('hidden');
   }
