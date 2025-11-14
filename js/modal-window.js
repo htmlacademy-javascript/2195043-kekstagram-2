@@ -1,14 +1,9 @@
 import { isEscapeKey } from './utils.js';
-import { renderComments } from './render-comments.js';
+import { initComments } from './comments-handler.js';
 
 const modalWindow = document.querySelector('.big-picture');
 const bodyElement = document.querySelector('body');
 const closeButtonElement = modalWindow?.querySelector('.big-picture__cancel');
-const commentsContainer = modalWindow?.querySelector('.social__comments');
-const commentCountElement = modalWindow?.querySelector('.social__comment-count');
-const commentsLoaderElement = modalWindow?.querySelector('.comments-loader');
-const commentShownCountElement = modalWindow?.querySelector('.social__comment-shown-count');
-const commentTotalCountElement = modalWindow?.querySelector('.social__comment-total-count');
 
 if (!modalWindow || !bodyElement) {
   throw new Error('Необходимые элементы модального окна не найдены');
@@ -39,69 +34,9 @@ const handleOverlayClick = (clickEvent) => {
   }
 };
 
-const createCommentsLoader = (comments) => {
-  let renderedCount = 0;
-  const totalCount = comments.length;
-
-  const updateCounter = () => {
-    if (commentShownCountElement) {
-      commentShownCountElement.textContent = renderedCount;
-    }
-    if (commentTotalCountElement) {
-      commentTotalCountElement.textContent = totalCount;
-    }
-  };
-
-  const loadMore = () => {
-    const result = renderComments(comments, commentsContainer, renderedCount);
-    if (result.ok) {
-      renderedCount = result.value.renderedCount;
-      updateCounter();
-
-      if (renderedCount >= totalCount && commentsLoaderElement) {
-        commentsLoaderElement.classList.add('hidden');
-      }
-    }
-  };
-
-  return loadMore;
-};
-
-let currentLoadMoreHandler = null;
-
-const setupComments = (comments) => {
-  if (!comments || !commentsContainer) {
-    return;
-  }
-
-  commentsContainer.innerHTML = '';
-
-  if (comments.length === 0) {
-    if (commentCountElement) {
-      commentCountElement.classList.add('hidden');
-    }
-    if (commentsLoaderElement) {
-      commentsLoaderElement.classList.add('hidden');
-    }
-    return;
-  }
-
-  if (commentCountElement) {
-    commentCountElement.classList.remove('hidden');
-  }
-  if (commentsLoaderElement) {
-    commentsLoaderElement.classList.remove('hidden');
-
-    if (currentLoadMoreHandler) {
-      commentsLoaderElement.removeEventListener('click', currentLoadMoreHandler);
-    }
-
-    const loadMore = createCommentsLoader(comments);
-    loadMore();
-
-    currentLoadMoreHandler = loadMore;
-    commentsLoaderElement.addEventListener('click', loadMore);
-  }
+const handleCloseButtonClick = (event) => {
+  event.preventDefault();
+  closeModal(handleKeydown);
 };
 
 const setupModalContent = (url, description, likes) => {
@@ -120,30 +55,24 @@ const setupModalContent = (url, description, likes) => {
   }
 };
 
-let isInitialized = false;
+export const openModalWindow = (url, description, likes, comments) => {
+  setupModalContent(url, description, likes);
 
-const initializeModalListeners = () => {
-  if (isInitialized) {
-    return;
-  }
+  const commentsElements = {
+    container: modalWindow.querySelector('.social__comments'),
+    counterBlock: modalWindow.querySelector('.social__comment-count'),
+    loaderButton: modalWindow.querySelector('.comments-loader'),
+    shownCount: modalWindow.querySelector('.social__comment-shown-count'),
+    totalCount: modalWindow.querySelector('.social__comment-total-count'),
+  };
+
+  initComments(comments, commentsElements);
 
   if (closeButtonElement) {
-    closeButtonElement.addEventListener('click', (event) => {
-      event.preventDefault();
-      closeModal(handleKeydown);
-    });
+    closeButtonElement.addEventListener('click', handleCloseButtonClick);
   }
 
   modalWindow.addEventListener('click', handleOverlayClick);
-
-  isInitialized = true;
-};
-
-export const openModalWindow = (url, description, likes, comments) => {
-  initializeModalListeners();
-
-  setupModalContent(url, description, likes);
-  setupComments(comments);
 
   modalWindow.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
