@@ -1,48 +1,38 @@
 import { isEscapeKey } from './utils.js';
 import { initComments } from './comments-handler.js';
 
-const modalWindow = document.querySelector('.big-picture');
+const modalElement = document.querySelector('.big-picture');
 const bodyElement = document.querySelector('body');
-const closeButtonElement = modalWindow?.querySelector('.big-picture__cancel');
+const closeButtonElement = modalElement?.querySelector('.big-picture__cancel');
 
-if (!modalWindow || !bodyElement) {
-  throw new Error('Необходимые элементы модального окна не найдены');
-}
+let controller;
 
 const hideModal = () => {
-  modalWindow.classList.add('hidden');
-  bodyElement.classList.remove('modal-open');
+  modalElement?.classList.add('hidden');
+  bodyElement?.classList.remove('modal-open');
 };
 
-const closeModal = (keydownHandler) => {
+const closeModal = () => {
   hideModal();
-  if (keydownHandler) {
-    document.removeEventListener('keydown', keydownHandler);
-  }
+  controller?.abort();
 };
 
 const handleKeydown = (keyboardEvent) => {
   if (isEscapeKey(keyboardEvent)) {
     keyboardEvent.preventDefault();
-    closeModal(handleKeydown);
-  }
-};
-
-const handleOverlayClick = (clickEvent) => {
-  if (clickEvent.target === clickEvent.currentTarget) {
-    closeModal(handleKeydown);
+    closeModal();
   }
 };
 
 const handleCloseButtonClick = (event) => {
   event.preventDefault();
-  closeModal(handleKeydown);
+  closeModal();
 };
 
 const setupModalContent = (url, description, likes) => {
-  const img = modalWindow.querySelector('img');
-  const likesCount = modalWindow.querySelector('.likes-count');
-  const caption = modalWindow.querySelector('.social__caption');
+  const img = modalElement.querySelector('img');
+  const likesCount = modalElement.querySelector('.likes-count');
+  const caption = modalElement.querySelector('.social__caption');
 
   if (img) {
     img.src = url;
@@ -55,26 +45,23 @@ const setupModalContent = (url, description, likes) => {
   }
 };
 
-export const openModalWindow = (url, description, likes, comments) => {
-  setupModalContent(url, description, likes);
-
+export const openPictureModal = (url, description, likes, comments) => {
+  controller = new AbortController();
+  const { signal } = controller;
   const commentsElements = {
-    container: modalWindow.querySelector('.social__comments'),
-    counterBlock: modalWindow.querySelector('.social__comment-count'),
-    loaderButton: modalWindow.querySelector('.comments-loader'),
-    shownCount: modalWindow.querySelector('.social__comment-shown-count'),
-    totalCount: modalWindow.querySelector('.social__comment-total-count'),
+    container: modalElement?.querySelector('.social__comments'),
+    counterBlock: modalElement?.querySelector('.social__comment-count'),
+    loaderButton: modalElement?.querySelector('.comments-loader'),
+    shownCount: modalElement?.querySelector('.social__comment-shown-count'),
+    totalCount: modalElement?.querySelector('.social__comment-total-count'),
   };
 
+  setupModalContent(url, description, likes);
   initComments(comments, commentsElements);
 
-  if (closeButtonElement) {
-    closeButtonElement.addEventListener('click', handleCloseButtonClick);
-  }
+  modalElement?.classList.remove('hidden');
+  bodyElement?.classList.add('modal-open');
 
-  modalWindow.addEventListener('click', handleOverlayClick);
-
-  modalWindow.classList.remove('hidden');
-  bodyElement.classList.add('modal-open');
-  document.addEventListener('keydown', handleKeydown);
+  closeButtonElement?.addEventListener('click', handleCloseButtonClick, {signal});
+  document.addEventListener('keydown', handleKeydown, {signal});
 };

@@ -1,7 +1,7 @@
 import { CONFIG } from './config.js';
 import { createPictureCollection } from './pictures.js';
 import { renderPictures } from './render-pictures.js';
-import { setupPictureClickHandler } from './picture-handler.js';
+import { initPictureModal } from './picture-handler.js';
 
 const PICTURES_COUNT = 25;
 
@@ -25,4 +25,4 @@ if (!picturesRenderResult.ok) {
   throw new Error(picturesRenderResult.error);
 }
 
-setupPictureClickHandler(pictures, picturesContainerElement);
+initPictureModal(pictures, picturesContainerElement);

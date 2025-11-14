@@ -1,6 +1,6 @@
-import { openModalWindow } from './modal-window.js';
+import { openPictureModal } from './modal-window.js';
 
-export const setupPictureClickHandler = (pictures, containerElement) => {
+export const initPictureModal = (pictures, containerElement) => {
   if (!containerElement) {
     return;
   }
@@ -23,7 +23,7 @@ export const setupPictureClickHandler = (pictures, containerElement) => {
       return;
     }
 
-    openModalWindow(picture.url, picture.description, picture.likes, picture.comments);
+    openPictureModal(picture.url, picture.description, picture.likes, picture.comments);
   });
 };
 
