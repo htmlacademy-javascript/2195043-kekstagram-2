@@ -1,83 +1,80 @@
 import { isEscapeKey } from './utils.js';
-import { renderComments } from './render-comments.js';
+import { initComments } from './comments-handler.js';
 
 const modalWindow = document.querySelector('.big-picture');
 const bodyElement = document.querySelector('body');
-const closeButtonElement = modalWindow.querySelector('.big-picture__cancel');
-const commentsContainer = modalWindow.querySelector('.social__comments');
-const commentCountElement = modalWindow.querySelector('.social__comment-count');
-const commentsLoaderElement = modalWindow.querySelector('.comments-loader');
+const closeButtonElement = modalWindow?.querySelector('.big-picture__cancel');
+
+if (!modalWindow || !bodyElement) {
+  throw new Error('Необходимые элементы модального окна не найдены');
+}
 
 const hideModal = () => {
   modalWindow.classList.add('hidden');
   bodyElement.classList.remove('modal-open');
 };
 
-const removeKeyboardListener = (handler) => {
-  document.removeEventListener('keydown', handler);
+const closeModal = (keydownHandler) => {
+  hideModal();
+  if (keydownHandler) {
+    document.removeEventListener('keydown', keydownHandler);
+  }
 };
 
-const addKeyboardListener = (handler) => {
-  document.addEventListener('keydown', handler);
+const handleKeydown = (keyboardEvent) => {
+  if (isEscapeKey(keyboardEvent)) {
+    keyboardEvent.preventDefault();
+    closeModal(handleKeydown);
+  }
 };
 
-const createCloseHandler = () => {
-  const handlers = {};
-
-  handlers.close = () => {
-    hideModal();
-    removeKeyboardListener(handlers.keydown);
-  };
-
-  handlers.keydown = (keyboardEvent) => {
-    if (isEscapeKey(keyboardEvent)) {
-      keyboardEvent.preventDefault();
-      handlers.close();
-    }
-  };
-
-  handlers.overlayClick = (clickEvent) => {
-    if (clickEvent.target === clickEvent.currentTarget) {
-      handlers.close();
-    }
-  };
-
-  return {
-    handleClose: handlers.close,
-    handleKeydown: handlers.keydown,
-    handleOverlayClick: handlers.overlayClick
-  };
+const handleOverlayClick = (clickEvent) => {
+  if (clickEvent.target === clickEvent.currentTarget) {
+    closeModal(handleKeydown);
+  }
 };
 
-const { handleClose, handleKeydown, handleOverlayClick } = createCloseHandler();
+const handleCloseButtonClick = (event) => {
+  event.preventDefault();
+  closeModal(handleKeydown);
+};
+
+const setupModalContent = (url, description, likes) => {
+  const img = modalWindow.querySelector('img');
+  const likesCount = modalWindow.querySelector('.likes-count');
+  const caption = modalWindow.querySelector('.social__caption');
+
+  if (img) {
+    img.src = url;
+  }
+  if (likesCount) {
+    likesCount.textContent = likes;
+  }
+  if (caption) {
+    caption.textContent = description;
+  }
+};
 
 export const openModalWindow = (url, description, likes, comments) => {
+  setupModalContent(url, description, likes);
+
+  const commentsElements = {
+    container: modalWindow.querySelector('.social__comments'),
+    counterBlock: modalWindow.querySelector('.social__comment-count'),
+    loaderButton: modalWindow.querySelector('.comments-loader'),
+    shownCount: modalWindow.querySelector('.social__comment-shown-count'),
+    totalCount: modalWindow.querySelector('.social__comment-total-count'),
+  };
+
+  initComments(comments, commentsElements);
+
+  if (closeButtonElement) {
+    closeButtonElement.addEventListener('click', handleCloseButtonClick);
+  }
+
+  modalWindow.addEventListener('click', handleOverlayClick);
+
   modalWindow.classList.remove('hidden');
   bodyElement.classList.add('modal-open');
-
-  modalWindow.querySelector('img').src = url;
-  modalWindow.querySelector('.likes-count').textContent = likes;
-  modalWindow.querySelector('.social__caption').textContent = description;
-
-  if (comments && commentsContainer) {
-    const commentsCount = comments.length;
-    modalWindow.querySelector('.social__comment-shown-count').textContent = commentsCount;
-    modalWindow.querySelector('.social__comment-total-count').textContent = commentsCount;
-    renderComments(comments, commentsContainer);
-  }
-
-  if (commentCountElement) {
-    commentCountElement.classList.add('hidden');
-  }
-  if (commentsLoaderElement) {
-    commentsLoaderElement.classList.add('hidden');
-  }
-
-  addKeyboardListener(handleKeydown);
+  document.addEventListener('keydown', handleKeydown);
 };
-
-closeButtonElement.addEventListener('click', (event) => {
-  event.preventDefault();
-  handleClose();
-});
-modalWindow.addEventListener('click', handleOverlayClick);
