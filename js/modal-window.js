@@ -1,83 +1,67 @@
 import { isEscapeKey } from './utils.js';
-import { renderComments } from './render-comments.js';
+import { initComments } from './comments-handler.js';
 
-const modalWindow = document.querySelector('.big-picture');
+const modalElement = document.querySelector('.big-picture');
 const bodyElement = document.querySelector('body');
-const closeButtonElement = modalWindow.querySelector('.big-picture__cancel');
-const commentsContainer = modalWindow.querySelector('.social__comments');
-const commentCountElement = modalWindow.querySelector('.social__comment-count');
-const commentsLoaderElement = modalWindow.querySelector('.comments-loader');
+const closeButtonElement = modalElement?.querySelector('.big-picture__cancel');
+
+let controller;
 
 const hideModal = () => {
-  modalWindow.classList.add('hidden');
-  bodyElement.classList.remove('modal-open');
+  modalElement?.classList.add('hidden');
+  bodyElement?.classList.remove('modal-open');
 };
 
-const removeKeyboardListener = (handler) => {
-  document.removeEventListener('keydown', handler);
+const closeModal = () => {
+  hideModal();
+  controller?.abort();
 };
 
-const addKeyboardListener = (handler) => {
-  document.addEventListener('keydown', handler);
-};
-
-const createCloseHandler = () => {
-  const handlers = {};
-
-  handlers.close = () => {
-    hideModal();
-    removeKeyboardListener(handlers.keydown);
-  };
-
-  handlers.keydown = (keyboardEvent) => {
-    if (isEscapeKey(keyboardEvent)) {
-      keyboardEvent.preventDefault();
-      handlers.close();
-    }
-  };
-
-  handlers.overlayClick = (clickEvent) => {
-    if (clickEvent.target === clickEvent.currentTarget) {
-      handlers.close();
-    }
-  };
-
-  return {
-    handleClose: handlers.close,
-    handleKeydown: handlers.keydown,
-    handleOverlayClick: handlers.overlayClick
-  };
-};
-
-const { handleClose, handleKeydown, handleOverlayClick } = createCloseHandler();
-
-export const openModalWindow = (url, description, likes, comments) => {
-  modalWindow.classList.remove('hidden');
-  bodyElement.classList.add('modal-open');
-
-  modalWindow.querySelector('img').src = url;
-  modalWindow.querySelector('.likes-count').textContent = likes;
-  modalWindow.querySelector('.social__caption').textContent = description;
-
-  if (comments && commentsContainer) {
-    const commentsCount = comments.length;
-    modalWindow.querySelector('.social__comment-shown-count').textContent = commentsCount;
-    modalWindow.querySelector('.social__comment-total-count').textContent = commentsCount;
-    renderComments(comments, commentsContainer);
+const handleKeydown = (keyboardEvent) => {
+  if (isEscapeKey(keyboardEvent)) {
+    keyboardEvent.preventDefault();
+    closeModal();
   }
-
-  if (commentCountElement) {
-    commentCountElement.classList.add('hidden');
-  }
-  if (commentsLoaderElement) {
-    commentsLoaderElement.classList.add('hidden');
-  }
-
-  addKeyboardListener(handleKeydown);
 };
 
-closeButtonElement.addEventListener('click', (event) => {
+const handleCloseButtonClick = (event) => {
   event.preventDefault();
-  handleClose();
-});
-modalWindow.addEventListener('click', handleOverlayClick);
+  closeModal();
+};
+
+const setupModalContent = (url, description, likes) => {
+  const img = modalElement.querySelector('img');
+  const likesCount = modalElement.querySelector('.likes-count');
+  const caption = modalElement.querySelector('.social__caption');
+
+  if (img) {
+    img.src = url;
+  }
+  if (likesCount) {
+    likesCount.textContent = likes;
+  }
+  if (caption) {
+    caption.textContent = description;
+  }
+};
+
+export const openPictureModal = (url, description, likes, comments) => {
+  controller = new AbortController();
+  const { signal } = controller;
+  const commentsElements = {
+    container: modalElement?.querySelector('.social__comments'),
+    counterBlock: modalElement?.querySelector('.social__comment-count'),
+    loaderButton: modalElement?.querySelector('.comments-loader'),
+    shownCount: modalElement?.querySelector('.social__comment-shown-count'),
+    totalCount: modalElement?.querySelector('.social__comment-total-count'),
+  };
+
+  setupModalContent(url, description, likes);
+  initComments(comments, commentsElements);
+
+  modalElement?.classList.remove('hidden');
+  bodyElement?.classList.add('modal-open');
+
+  closeButtonElement?.addEventListener('click', handleCloseButtonClick, {signal});
+  document.addEventListener('keydown', handleKeydown, {signal});
+};

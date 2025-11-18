@@ -8,9 +8,7 @@ const buildPictureNode = (picture, templateElement) => {
   img.alt = description;
   img.setAttribute('data-picture-id', id);
   node.querySelector('.picture__likes').textContent = String(likes);
-  node.querySelector('.picture__comments').textContent = String(
-    comments.length
-  );
+  node.querySelector('.picture__comments').textContent = String(comments.length);
   return node;
 };
 
@@ -32,9 +30,6 @@ export const renderPictures = (pictures, templateElement, containerElement) => {
     .forEach((node) => fragment.append(node));
 
   containerElement.append(fragment);
-
-  // eslint-disable-next-line no-console
-  console.log(templateElement);
 
   return success(containerElement);
 };
