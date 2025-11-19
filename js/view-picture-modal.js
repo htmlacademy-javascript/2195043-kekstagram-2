@@ -29,7 +29,7 @@ const handleCloseButtonClick = (event) => {
   closeModal();
 };
 
-const setupModalContent = (url, description, likes) => {
+const initModalContent = (url, description, likes) => {
   const img = modalElement?.querySelector('img');
   const likesCount = modalElement?.querySelector('.likes-count');
   const caption = modalElement?.querySelector('.social__caption');
@@ -56,7 +56,7 @@ export const openPictureModal = (url, description, likes, comments) => {
     totalCount: modalElement?.querySelector('.social__comment-total-count'),
   };
 
-  setupModalContent(url, description, likes);
+  initModalContent(url, description, likes);
   initComments(comments, commentsElements);
 
   modalElement?.classList.remove('hidden');
