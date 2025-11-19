@@ -63,6 +63,10 @@ export const validateHashtags = (value) => {
 };
 
 export const isValidHashtags = (value) => {
+  if (value.length === 0) {
+    return true;
+  }
+
   const result = validateHashtags(value);
   return result.ok;
 };
