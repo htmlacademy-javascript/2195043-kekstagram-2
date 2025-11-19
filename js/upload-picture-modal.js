@@ -1,22 +1,10 @@
 import { isEscapeKey } from './utils.js';
-import { validateHashtags } from './validation-hashtags.js';
-import { descriptionErrorMessage, validateDescription } from './validation-description.js';
 
 const bodyElement = document.querySelector('body');
 const containerElement = document.querySelector('.img-upload');
 const modalOverlayElement = containerElement?.querySelector('.img-upload__overlay');
-const inputFileElement = containerElement?.querySelector('.img-upload__input');
 const closeButtonElement = containerElement?.querySelector('.img-upload__cancel');
-
 const formElement = containerElement?.querySelector('.img-upload__form');
-const hashtagsInputElement = formElement?.querySelector('.text__hashtags');
-const descriptionInputElement = formElement?.querySelector('.text__description');
-
-const pristineInstance = new Pristine(formElement, {
-  classTo: 'img-upload__field-wrapper',
-  errorClass: 'img-upload__field-wrapper--error',
-  errorTextParent: 'img-upload__field-wrapper',
-});
 
 let controller;
 
@@ -28,11 +16,12 @@ const hideModal = () => {
 const closeModal = () => {
   hideModal();
   controller?.abort();
+  formElement?.reset();
 };
 
-const handleKeydown = (keyboardEvent) => {
-  if (isEscapeKey(keyboardEvent)) {
-    keyboardEvent.preventDefault();
+const handleKeydown = (event) => {
+  if (isEscapeKey(event)) {
+    event.preventDefault();
     closeModal();
   }
 };
@@ -40,10 +29,9 @@ const handleKeydown = (keyboardEvent) => {
 const handleCloseButtonClick = (event) => {
   event.preventDefault();
   closeModal();
-  inputFileElement.value = '';
 };
 
-const openUploadPictureModal = () => {
+export const openUploadPictureModal = () => {
   controller = new AbortController();
   const { signal } = controller;
 
@@ -51,31 +39,5 @@ const openUploadPictureModal = () => {
   bodyElement?.classList.add('modal-open');
 
   closeButtonElement?.addEventListener('click', handleCloseButtonClick);
-
   document?.addEventListener('keydown', handleKeydown, {signal});
 };
-
-export const initUploadPictureForm = () => {
-  inputFileElement.addEventListener('change', openUploadPictureModal);
-};
-
-pristineInstance.addValidator(
-  hashtagsInputElement,
-  (value) => {
-    const result = validateHashtags(value);
-    return result.ok;
-  },
-  (value) => {
-    const result = validateHashtags(value);
-    return result.ok ? result.value : result.error;
-  },
-  2,
-  false
-);
-
-pristineInstance.addValidator(
-  descriptionInputElement, validateDescription,
-  descriptionErrorMessage,
-  2,
-  false
-);

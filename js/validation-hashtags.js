@@ -62,4 +62,13 @@ export const validateHashtags = (value) => {
   return failure(hashtagErrorMessage);
 };
 
+export const isValidHashtags = (value) => {
+  const result = validateHashtags(value);
+  return result.ok;
+};
+
+export const hashtagsErrorMessage = (value) => {
+  const result = validateHashtags(value);
+  return result.ok ? result.value : result.error;
+};
 

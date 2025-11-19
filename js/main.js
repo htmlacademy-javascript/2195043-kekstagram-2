@@ -2,7 +2,7 @@ import { CONFIG } from './config.js';
 import { createPictureCollection } from './pictures.js';
 import { renderPictures } from './render-pictures.js';
 import { initPictureModal } from './picture-handler.js';
-import { initUploadPictureForm } from './upload-picture-modal.js';
+import { initUploadPictureForm } from './upload-picture-form.js';
 
 const PICTURES_COUNT = 25;
 
