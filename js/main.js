@@ -3,6 +3,7 @@ import { createPictureCollection } from './pictures.js';
 import { renderPictures } from './render-pictures.js';
 import { initPictureModal } from './picture-handler.js';
 import { initUploadPictureForm } from './upload-picture-form.js';
+import { initUploadPictureModal } from './upload-picture-modal.js';
 
 const PICTURES_COUNT = 25;
 
@@ -27,4 +28,5 @@ if (!picturesRenderResult.ok) {
 }
 
 initPictureModal(pictures, picturesContainerElement);
+initUploadPictureModal();
 initUploadPictureForm();
