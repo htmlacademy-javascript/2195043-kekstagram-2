@@ -17,9 +17,9 @@ const closeModal = () => {
   controller?.abort();
 };
 
-const handleKeydown = (keyboardEvent) => {
-  if (isEscapeKey(keyboardEvent)) {
-    keyboardEvent.preventDefault();
+const handleKeydown = (event) => {
+  if (isEscapeKey(event)) {
+    event.preventDefault();
     closeModal();
   }
 };
@@ -29,10 +29,10 @@ const handleCloseButtonClick = (event) => {
   closeModal();
 };
 
-const setupModalContent = (url, description, likes) => {
-  const img = modalElement.querySelector('img');
-  const likesCount = modalElement.querySelector('.likes-count');
-  const caption = modalElement.querySelector('.social__caption');
+const initModalContent = (url, description, likes) => {
+  const img = modalElement?.querySelector('img');
+  const likesCount = modalElement?.querySelector('.likes-count');
+  const caption = modalElement?.querySelector('.social__caption');
 
   if (img) {
     img.src = url;
@@ -56,7 +56,7 @@ export const openPictureModal = (url, description, likes, comments) => {
     totalCount: modalElement?.querySelector('.social__comment-total-count'),
   };
 
-  setupModalContent(url, description, likes);
+  initModalContent(url, description, likes);
   initComments(comments, commentsElements);
 
   modalElement?.classList.remove('hidden');
