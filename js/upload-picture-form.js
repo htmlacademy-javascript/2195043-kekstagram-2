@@ -1,7 +1,7 @@
 import { isValidHashtags, hashtagsErrorMessage } from './validation-hashtags.js';
 import { descriptionErrorMessage, validateDescription } from './validation-description.js';
 import { openUploadPictureModal } from './upload-picture-modal.js';
-import { initPictureEffects } from './picture-effects.js';
+import { initPictureEditHandler } from './picture-edit-handler.js';
 import { eventBus } from './utils.js';
 
 const containerElement = document.querySelector('.img-upload');
@@ -57,6 +57,6 @@ export const initUploadPictureForm = () => {
 
   eventBus.subscribe('uploadPictureModal:closed', handleFormReset);
 
-  initPictureEffects();
+  initPictureEditHandler();
   initPictureFormValidator();
 };
