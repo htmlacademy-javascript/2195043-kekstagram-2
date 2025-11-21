@@ -1,10 +1,13 @@
 import { pictureEffectsConfig } from './picture-effects-config.js';
+import { eventBus } from './utils.js';
 
-const effectRadiosElement = document.querySelectorAll('.effects__radio');
+const effectRadioElements = document.querySelectorAll('.effects__radio');
 const effectLevelElement = document.querySelector('.img-upload__effect-level');
 const effectLevelValueElement = document.querySelector('.effect-level__value');
 const sliderElement = effectLevelElement.querySelector('.effect-level__slider');
 const imagePreviewElement = document.querySelector('.img-upload__preview img');
+
+let currentEffect = 'none';
 
 const applyEffect = (filter, value, unit, preview) => {
   preview.style.filter = filter ? `${filter}(${value}${unit})` : '';
@@ -43,13 +46,18 @@ const updateSliderOptions = (element, config) => {
   element.noUiSlider.set(config.start);
 };
 
+const resetPictureEffects = () => {
+  currentEffect = 'none';
 
-export const initPictureEffects = () => {
+  if (sliderElement && sliderElement.noUiSlider) {
+    sliderElement.noUiSlider.reset();
+  }
+};
+
+export const initPictureEffects = (triggerResetEvent) => {
   if (!sliderElement) {
     throw new Error('Слайдер не найден');
   }
-
-  let currentEffect = 'none';
 
   const onSliderUpdate = (value) => {
     effectLevelValueElement.value = value;
@@ -60,9 +68,10 @@ export const initPictureEffects = () => {
   createSlider(sliderElement, pictureEffectsConfig.none.slider, onSliderUpdate);
   effectLevelElement.style.display = 'none';
 
-  effectRadiosElement.forEach((radio) =>
+  effectRadioElements.forEach((radio) =>
     radio.addEventListener('change', () => {
       currentEffect = radio.value;
+
       const settings = pictureEffectsConfig[currentEffect];
 
       effectLevelElement.style.display = settings.hideSlider ? 'none' : 'block';
@@ -73,4 +82,7 @@ export const initPictureEffects = () => {
       effectLevelValueElement.value = settings.slider.start;
     })
   );
+
+  eventBus.subscribe(triggerResetEvent, resetPictureEffects);
 };
+

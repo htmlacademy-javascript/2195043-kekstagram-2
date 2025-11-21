@@ -1,6 +1,9 @@
+import { eventBus } from './utils.js';
+
 const SCALE_MIN = 25;
 const SCALE_MAX = 100;
 const SCALE_STEP = 25;
+const DEFAULT_SCALE = 100;
 
 const scaleDecreaseButtonElement = document.querySelector('.scale__control--smaller');
 const scaleIncreaseButtonElement = document.querySelector('.scale__control--bigger');
@@ -8,9 +11,12 @@ const scaleValueInputElement = document.querySelector('.scale__control--value');
 const imagePreviewElement = document.querySelector('.img-upload__preview img');
 
 const setScale = (value, scaleValueInput, preview) => {
-  scaleValueInput.value = `${value }%`;
+  scaleValueInput.setAttribute('value', `${value}%`);
   preview.style.transform = `scale(${value / 100})`;
-  return value;
+};
+
+const resetScale = () => {
+  setScale(DEFAULT_SCALE, scaleValueInputElement, imagePreviewElement);
 };
 
 const changeScale = (value, delta) => {
@@ -24,8 +30,8 @@ const changeScale = (value, delta) => {
   return newValue;
 };
 
-export const initPictureScale = () => {
-  let currentScale = 100;
+export const initPictureScale = (triggerResetEvent) => {
+  let currentScale = DEFAULT_SCALE;
   setScale(currentScale, scaleValueInputElement, imagePreviewElement);
 
   scaleDecreaseButtonElement.addEventListener('click', () => {
@@ -37,4 +43,6 @@ export const initPictureScale = () => {
     currentScale = changeScale(currentScale, SCALE_STEP);
     setScale(currentScale, scaleValueInputElement, imagePreviewElement);
   });
+
+  eventBus.subscribe(triggerResetEvent, resetScale);
 };

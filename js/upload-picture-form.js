@@ -57,6 +57,6 @@ export const initUploadPictureForm = () => {
 
   eventBus.subscribe('uploadPictureModal:closed', handleFormReset);
 
-  initPictureEditHandler();
+  initPictureEditHandler('uploadPictureModal:closed');
   initPictureFormValidator();
 };
