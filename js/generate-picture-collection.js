@@ -1,5 +1,5 @@
 import { getRandomInt, getRandomArrayItem } from './utils.js';
-import { generateCommentsArray } from './comments.js';
+import { generateRandomComments } from './generate-random-comments.js';
 
 export const createPicture = ({ id, config }) => {
   const minLikes = 15;
@@ -13,10 +13,10 @@ export const createPicture = ({ id, config }) => {
     url: `photos/${id + 1}.jpg`,
     description,
     likes: getRandomInt(minLikes, maxLikes),
-    comments: generateCommentsArray(config),
+    comments: generateRandomComments(config),
   };
 };
 
-export const createPictureCollection = ({ count, config }) =>
+export const generatePictureCollection = ({ count, config }) =>
   Array.from({ length: count }, (_, i) => createPicture({ id: i, config }));
 

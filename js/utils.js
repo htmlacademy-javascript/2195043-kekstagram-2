@@ -28,37 +28,34 @@ export const getDataAttributeFromEvent = (event, attributeName) => {
 export const isEscapeKey = (event) => event.key === 'Escape';
 
 class EventBus {
+  #events;
+
   constructor() {
-    this.events = {};
+    this.#events = new Map();
   }
 
   subscribe(event, callback) {
-    if(!this.events[event]) {
-      this.events[event] = [];
+    if (!this.#events.has(event)) {
+      this.#events.set(event, new Set());
     }
 
-    if (!this.events[event].includes(callback)) {
-      this.events[event].push(callback);
-    }
+    this.#events.get(event).add(callback);
   }
 
   unsubscribe(event, callback) {
-    if (!this.events[event]) {
-      return undefined;
+    if (!this.#events.has(event)) {
+      return;
     }
 
-    this.events[event] = this.events[event].filter((cb) => cb !== callback);
+    this.#events.get(event).delete(callback);
   }
 
-
   publish(event, data) {
-    if (!this.events[event]) {
-      return undefined;
+    if (!this.#events.has(event)) {
+      return;
     }
 
-    this.events[event].forEach((cb) => {
-      cb(data);
-    });
+    this.#events.get(event).forEach((cb) => cb(data));
   }
 }
 export const eventBus = new EventBus();

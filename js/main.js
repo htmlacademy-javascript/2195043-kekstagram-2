@@ -1,5 +1,5 @@
-import { CONFIG } from './config.js';
-import { createPictureCollection } from './pictures.js';
+import { CONFIG } from './pictures-config.js';
+import { generatePictureCollection } from './generate-picture-collection.js';
 import { renderPictures } from './render-pictures.js';
 import { initPictureModal } from './picture-handler.js';
 import { initUploadPictureForm } from './upload-picture-form.js';
@@ -12,7 +12,7 @@ const pictureTemplateElement = document
   ?.content?.querySelector('.picture');
 const picturesContainerElement = document.querySelector('.pictures');
 
-const pictures = createPictureCollection({
+const pictures = generatePictureCollection({
   count: PICTURES_COUNT,
   config: CONFIG,
 });
