@@ -23,7 +23,7 @@ export const createComment = ({ id, config }) => {
   };
 };
 
-export const generateCommentsArray = (config) => {
+export const generateRandomComments = (config) => {
   const minComments = 0;
   const maxComments = 30;
 

@@ -719,13 +719,6 @@ main {
   position: relative;
 }
 
-.text-error {
-  font-size: 14px;
-  font-weight: 600;
-  color:#ffffff;
-}
-
-
 /**
  * Кнопка для отправки изображения
  */
