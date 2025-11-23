@@ -1,24 +1,22 @@
-import { CONFIG } from './pictures-config.js';
-import { generatePictureCollection } from './generate-picture-collection.js';
 import { renderPictures } from './render-pictures.js';
 import { initPictureModal } from './picture-handler.js';
 import { initUploadPictureForm } from './upload-picture-form.js';
 import { initUploadPictureModal } from './upload-picture-modal.js';
-
-const PICTURES_COUNT = 25;
+import { initDataErrorToast } from './data-fetch-error-toast.js';
+import { fetchData } from './utils.js';
+import { BASE_API } from './constants.js';
 
 const pictureTemplateElement = document
   .querySelector('#picture')
   ?.content?.querySelector('.picture');
 const picturesContainerElement = document.querySelector('.pictures');
 
-const pictures = generatePictureCollection({
-  count: PICTURES_COUNT,
-  config: CONFIG,
-});
+const picturesData = await fetchData(`${BASE_API}/data`);
+
+initDataErrorToast(!picturesData.ok, picturesData.error);
 
 const picturesRenderResult = renderPictures(
-  pictures,
+  picturesData.value,
   pictureTemplateElement,
   picturesContainerElement
 );
@@ -27,6 +25,6 @@ if (!picturesRenderResult.ok) {
   throw new Error(picturesRenderResult.error);
 }
 
-initPictureModal(pictures, picturesContainerElement);
+initPictureModal(picturesData.value, picturesContainerElement);
 initUploadPictureModal();
 initUploadPictureForm();
