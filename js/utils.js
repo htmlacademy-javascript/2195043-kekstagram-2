@@ -11,20 +11,6 @@ export const getRandomArrayItem = (arr) => {
   return success(arr[getRandomInt(0, arr.length - 1)]);
 };
 
-export const getDataAttributeFromEvent = (event, attributeName) => {
-  if (!event || !event.target) {
-    return failure('Событие или целевой элемент отсутствует');
-  }
-
-  const attributeValue = event.target.getAttribute(attributeName);
-
-  if (attributeValue === null) {
-    return failure('Атрибут не найден');
-  }
-
-  return success(attributeValue);
-};
-
 export const isEscapeKey = (event) => event.key === 'Escape';
 
 class EventBus {
@@ -59,3 +45,24 @@ class EventBus {
   }
 }
 export const eventBus = new EventBus();
+
+export const fetchData = async (url) => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    return failure('Никогда такого не было и вот опять!');
+  }
+  const data = await response.json();
+  return success(data);
+};
+
+export const sendData = async (url, data) => {
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data),
+  });
+  if (!response.ok) {
+    return failure('Ошибка отправки');
+  }
+  return success(await response.json());
+};
