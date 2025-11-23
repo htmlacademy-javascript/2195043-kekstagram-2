@@ -11,7 +11,7 @@ const pictureTemplateElement = document
   ?.content?.querySelector('.picture');
 const picturesContainerElement = document.querySelector('.pictures');
 
-const picturesData = await fetchData(BASE_API);
+const picturesData = await fetchData(`${BASE_API}/data`);
 
 initDataErrorToast(!picturesData.ok, picturesData.error);
 

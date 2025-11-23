@@ -53,4 +53,5 @@ export const openUploadPictureModal = () => {
 export const initUploadPictureModal = () => {
   eventBus.subscribe('uploadPictureModal:enableEscape', enableEscapeClose);
   eventBus.subscribe('uploadPictureModal:disableEscape', disableEscapeClose);
+  eventBus.subscribe('uploadPictureModal:needClose', closeModal);
 };

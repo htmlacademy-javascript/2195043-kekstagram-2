@@ -58,11 +58,10 @@ export const fetchData = async (url) => {
 export const sendData = async (url, data) => {
   const response = await fetch(url, {
     method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(data),
+    body: data,
   });
   if (!response.ok) {
-    return failure('Ошибка отправки');
+    return failure(await response.json());
   }
   return success(await response.json());
 };
