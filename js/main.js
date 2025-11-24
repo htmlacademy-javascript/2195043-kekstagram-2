@@ -40,9 +40,9 @@ if (picturesData.ok) {
 //console.log('Начальное значение фильтра:', current);
 
 //eventBus.subscribe('filterChange', (filter) => {
-//console.log('Обновленное текущее состояние фильтра:', filter);
-//const filteredPictures = filterPicturesBy(filter, picturesData.value);
-//console.log(filteredPictures);
+//  console.log('Обновленное текущее состояние фильтра:', filter);
+//  const filteredPictures = filterPicturesBy(filter, picturesData.value);
+//  console.log(filteredPictures);
 
 //});
 
