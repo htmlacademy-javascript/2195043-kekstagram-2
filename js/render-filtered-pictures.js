@@ -30,40 +30,34 @@ const setActiveButton = (filter) => {
   filters[filter]?.();
 };
 
+const handleFilterChange = (filter) => {
+  if (currentFilter === filter) {
+    return;
+  }
+
+  currentFilter = filter;
+  setActiveButton(filter);
+  eventBus.publish('filterPicturesChange', filter);
+};
+
 
 export const initRenderFilteredPictures = (pictures) => {
-  if (!pictures) {
-    return currentFilter;
+  if (!Array.isArray(pictures) || pictures.length === 0) {
+    throw new Error('Некорректный массив изображений');
   }
 
   eventBus.subscribe('fetchPicturesData:success', visibleFilters());
+  eventBus.publish('filterPicturesChange', currentFilter);
 
   defaultFilterButtonElement.addEventListener('click', () => {
-    if (currentFilter === 'default') {
-      return;
-    }
-    currentFilter = 'default';
-    setActiveButton(currentFilter);
-    eventBus.publish('filterChange', currentFilter);
+    handleFilterChange('default');
   });
 
   randomFilterButtonElement.addEventListener('click', () => {
-    if (currentFilter === 'random') {
-      return;
-    }
-    currentFilter = 'random';
-    setActiveButton(currentFilter);
-    eventBus.publish('filterChange', currentFilter);
+    handleFilterChange('random');
   });
 
   discussedFilterButtonElement.addEventListener('click', () => {
-    if (currentFilter === 'discussed') {
-      return;
-    }
-    currentFilter = 'discussed';
-    setActiveButton(currentFilter);
-    eventBus.publish('filterChange', currentFilter);
+    handleFilterChange('discussed');
   });
-
-  return currentFilter;
 };
