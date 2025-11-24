@@ -11,6 +11,6 @@ const handleRemoveNode = (node) => {
   });
 };
 
-export const initUploadFormErrorPopup = (errorMessage) => {
+export const showErrorPopup = (errorMessage) => {
   notificationHandler(errorMessage, errorTemplateElement, '.error__title', handleRemoveNode);
 };

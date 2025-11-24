@@ -1,12 +1,12 @@
 import { isValidHashtags, hashtagsErrorMessage } from './validation-hashtags.js';
 import { descriptionErrorMessage, validateDescription } from './validation-description.js';
-import { openUploadPictureModal } from './upload-picture-modal.js';
+import { openUploadPictureModal } from './upload-picture-form-modal.js';
 import { initPictureEditHandler } from './picture-edit-handler.js';
 import { eventBus } from './shared/event-bus.js';
 import { sendData } from './shared/fetch.js';
 import { BASE_API } from './shared/constants.js';
-import { initUploadFormErrorPopup } from './upload-form-error-popup.js';
-import { initUploadFormSuccessPopup } from './upload-form-success-popup.js';
+import { showErrorPopup } from './show-error-popup.js';
+import { showSuccessPopup } from './show-success-popup.js';
 
 const containerElement = document.querySelector('.img-upload');
 const inputFileElement = containerElement?.querySelector('.img-upload__input');
@@ -42,11 +42,11 @@ const initPictureFormValidator = () => {
 };
 
 const handleInputFocus = () => {
-  eventBus.publish('uploadPictureModal:disableEscape');
+  eventBus.publish('uploadPictureFormModal:disableEscape');
 };
 
 const handleInputBlur = () => {
-  eventBus.publish('uploadPictureModal:enableEscape');
+  eventBus.publish('uploadPictureFormModal:enableEscape');
 };
 
 const handleFormReset = () => {
@@ -67,10 +67,10 @@ const handleSubmitForm = async (event) => {
 
   if (result.ok) {
     handleFormReset();
-    eventBus.publish('uploadPictureModal:needClose');
-    initUploadFormSuccessPopup('Успех!');
+    eventBus.publish('uploadPictureFormModal:needClose');
+    showSuccessPopup('Успех!');
   } else {
-    initUploadFormErrorPopup('Провал!');
+    showErrorPopup('Провал!');
   }
 
   setSubmitButtonDisabled(false);
@@ -95,7 +95,7 @@ export const initUploadPictureForm = () => {
 
   formElement.addEventListener('submit', handleSubmitForm);
 
-  eventBus.subscribe('uploadPictureModal:closed', handleFormReset);
+  eventBus.subscribe('uploadPictureFormModal:closed', handleFormReset);
 
-  initPictureEditHandler('uploadPictureModal:closed');
+  initPictureEditHandler('uploadPictureFormModal:closed');
 };

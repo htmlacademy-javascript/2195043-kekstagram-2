@@ -4,6 +4,7 @@ import { initComments } from './comments-handler.js';
 const modalElement = document.querySelector('.big-picture');
 const bodyElement = document.querySelector('body');
 const closeButtonElement = modalElement?.querySelector('.big-picture__cancel');
+const picturesContainerElement = document.querySelector('.pictures');
 
 let controller;
 
@@ -64,4 +65,27 @@ export const openPictureModal = (url, description, likes, comments) => {
 
   closeButtonElement?.addEventListener('click', handleCloseButtonClick, {signal});
   document.addEventListener('keydown', handleKeydown, {signal});
+};
+
+export const initPictureModal = (pictures) => {
+  picturesContainerElement.addEventListener('click', (event) => {
+    const target = event.target.closest('.picture__img');
+    if (!target) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const id = target.getAttribute('data-picture-id');
+    if (!id) {
+      return;
+    }
+
+    const picture = pictures.find((item) => item.id === Number(id));
+    if (!picture) {
+      return;
+    }
+
+    openPictureModal(picture.url, picture.description, picture.likes, picture.comments);
+  });
 };

@@ -1,5 +1,10 @@
 import { success, failure } from './shared/utils.js';
 
+const pictureTemplateElement = document
+  .querySelector('#picture')
+  ?.content?.querySelector('.picture');
+const picturesContainerElement = document.querySelector('.pictures');
+
 const buildPictureNode = (picture, templateElement) => {
   const { id, url, description, likes, comments } = picture;
   const node = templateElement.cloneNode(true);
@@ -12,7 +17,7 @@ const buildPictureNode = (picture, templateElement) => {
   return node;
 };
 
-export const renderPictures = (pictures, templateElement, containerElement) => {
+const renderPictures = (pictures, templateElement, containerElement) => {
   if (!templateElement || !containerElement) {
     return failure('Отсутствуют обязательные элементы');
   }
@@ -32,4 +37,16 @@ export const renderPictures = (pictures, templateElement, containerElement) => {
   containerElement.append(fragment);
 
   return success(containerElement);
+};
+
+export const initRenderPictures = (pictures) => {
+  const picturesRenderResult = renderPictures(
+    pictures,
+    pictureTemplateElement,
+    picturesContainerElement
+  );
+
+  if (!picturesRenderResult.ok) {
+    throw new Error(picturesRenderResult.error);
+  }
 };

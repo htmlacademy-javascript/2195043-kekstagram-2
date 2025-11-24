@@ -1,30 +1,21 @@
-import { renderPictures } from './render-pictures.js';
-import { initPictureModal } from './picture-handler.js';
+import { initRenderPictures } from './render-pictures.js';
+import { initPictureModal } from './picture-modal.js';
 import { initUploadPictureForm } from './upload-picture-form.js';
-import { initUploadPictureModal } from './upload-picture-modal.js';
-import { initDataErrorToast } from './data-fetch-error-toast.js';
+import { initUploadPictureModal } from './upload-picture-form-modal.js';
+import { showDataErrorToast } from './show-data-error-toast.js';
 import { fetchData } from './shared/fetch.js';
 import { BASE_API } from './shared/constants.js';
-
-const pictureTemplateElement = document
-  .querySelector('#picture')
-  ?.content?.querySelector('.picture');
-const picturesContainerElement = document.querySelector('.pictures');
+import { eventBus } from './shared/event-bus.js';
 
 const picturesData = await fetchData(`${BASE_API}/data`);
 
-initDataErrorToast(!picturesData.ok, picturesData.error);
-
-const picturesRenderResult = renderPictures(
-  picturesData.value,
-  pictureTemplateElement,
-  picturesContainerElement
-);
-
-if (!picturesRenderResult.ok) {
-  throw new Error(picturesRenderResult.error);
+if (picturesData.ok) {
+  eventBus.publish('fetchPicturesData:success');
+} else {
+  showDataErrorToast(picturesData.error);
 }
 
-initPictureModal(picturesData.value, picturesContainerElement);
+initRenderPictures(picturesData.value);
+initPictureModal(picturesData.value);
 initUploadPictureModal();
 initUploadPictureForm();

@@ -10,10 +10,6 @@ const handleRemoveNode = (node) => {
   }, 5000);
 };
 
-export const initDataErrorToast = (isRendered, errorMessage) => {
-  if (!isRendered) {
-    return;
-  }
-
+export const showDataErrorToast = (errorMessage) => {
   notificationHandler(errorMessage, dataErrorTemplateElement, '.data-error__title', handleRemoveNode);
 };

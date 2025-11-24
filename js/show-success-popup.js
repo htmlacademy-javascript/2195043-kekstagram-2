@@ -11,6 +11,6 @@ const handleRemoveNode = (node) => {
   });
 };
 
-export const initUploadFormSuccessPopup = (successMessage) => {
+export const showSuccessPopup = (successMessage) => {
   notificationHandler(successMessage, successTemplateElement, '.success__title', handleRemoveNode);
 };
