@@ -1,4 +1,4 @@
-import { eventBus } from './utils.js';
+import { eventBus } from './shared/event-bus.js';
 
 const SCALE_MIN = 25;
 const SCALE_MAX = 100;

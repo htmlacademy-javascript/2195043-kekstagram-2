@@ -1,4 +1,4 @@
-import { failure, success } from './utils.js';
+import { failure, success } from './shared/utils.js';
 
 const HASHTAG_PATTERN = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAGS = 5;

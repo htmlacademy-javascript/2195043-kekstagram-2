@@ -2,8 +2,9 @@ import { isValidHashtags, hashtagsErrorMessage } from './validation-hashtags.js'
 import { descriptionErrorMessage, validateDescription } from './validation-description.js';
 import { openUploadPictureModal } from './upload-picture-modal.js';
 import { initPictureEditHandler } from './picture-edit-handler.js';
-import { eventBus, sendData } from './utils.js';
-import { BASE_API } from './constants.js';
+import { eventBus } from './shared/event-bus.js';
+import { sendData } from './shared/fetch.js';
+import { BASE_API } from './shared/constants.js';
 import { initUploadFormErrorPopup } from './upload-form-error-popup.js';
 import { initUploadFormSuccessPopup } from './upload-form-success-popup.js';
 

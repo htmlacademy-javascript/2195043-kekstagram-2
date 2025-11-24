@@ -1,4 +1,4 @@
-import { isEscapeKey, eventBus } from './utils.js';
+import { isEscapeKey, eventBus } from './shared/utils.js';
 
 const bodyElement = document.querySelector('body');
 const containerElement = document.querySelector('.img-upload');

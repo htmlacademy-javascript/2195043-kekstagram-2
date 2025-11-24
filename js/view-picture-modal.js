@@ -1,4 +1,4 @@
-import { isEscapeKey } from './utils.js';
+import { isEscapeKey } from './shared/utils.js';
 import { initComments } from './comments-handler.js';
 
 const modalElement = document.querySelector('.big-picture');

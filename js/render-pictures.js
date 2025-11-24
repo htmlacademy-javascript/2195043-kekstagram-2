@@ -1,4 +1,4 @@
-import { success, failure } from './utils.js';
+import { success, failure } from './shared/utils.js';
 
 const buildPictureNode = (picture, templateElement) => {
   const { id, url, description, likes, comments } = picture;
