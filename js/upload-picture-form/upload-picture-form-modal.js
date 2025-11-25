@@ -1,5 +1,5 @@
-import { eventBus } from './shared/event-bus.js';
-import { isEscapeKey } from './shared/utils.js';
+import { eventBus } from '../shared/event-bus.js';
+import { isEscapeKey } from '../shared/utils.js';
 
 const bodyElement = document.querySelector('body');
 const containerElement = document.querySelector('.img-upload');

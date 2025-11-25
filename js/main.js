@@ -1,13 +1,10 @@
-import { initRenderFilteredPictures } from './render-filtered-pictures.js';
-import { initPictureModal } from './picture-modal.js';
-import { initUploadPictureForm } from './upload-picture-form.js';
-import { initUploadPictureModal } from './upload-picture-form-modal.js';
-import { showDataErrorToast } from './show-data-error-toast.js';
+import { initRenderFilteredPictures, renderPictures, initPictureModal } from './pictures/';
+import { initUploadPictureForm, initUploadPictureModal } from './upload-picture-form/';
+import { showDataErrorToast } from './notification/';
 import { fetchData } from './shared/fetch.js';
 import { BASE_API } from './shared/constants.js';
 import { eventBus } from './shared/event-bus.js';
 import { debounce } from './shared/debounce.js';
-import { renderPictures } from './render-pictures.js';
 import { filterPicturesBy } from './shared/utils.js';
 
 const picturesData = await fetchData(`${BASE_API}/data`);

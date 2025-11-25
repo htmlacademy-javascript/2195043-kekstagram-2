@@ -1,12 +1,10 @@
-import { isValidHashtags, hashtagsErrorMessage } from './validation-hashtags.js';
-import { descriptionErrorMessage, validateDescription } from './validation-description.js';
+import { descriptionErrorMessage, validateDescription, hashtagsErrorMessage, isValidHashtags } from '../validation/';
 import { openUploadPictureModal } from './upload-picture-form-modal.js';
-import { initPictureEditHandler } from './picture-edit-handler.js';
-import { eventBus } from './shared/event-bus.js';
-import { sendData } from './shared/fetch.js';
-import { BASE_API } from './shared/constants.js';
-import { showErrorPopup } from './show-error-popup.js';
-import { showSuccessPopup } from './show-success-popup.js';
+import { initPictureEditHandler } from '../picture-edit/';
+import { eventBus } from '../shared/event-bus.js';
+import { sendData } from '../shared/fetch.js';
+import { BASE_API } from '../shared/constants.js';
+import { showErrorPopup, showSuccessPopup } from '../notification/';
 
 const containerElement = document.querySelector('.img-upload');
 const inputFileElement = containerElement?.querySelector('.img-upload__input');

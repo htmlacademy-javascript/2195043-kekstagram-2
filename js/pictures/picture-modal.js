@@ -1,5 +1,5 @@
-import { isEscapeKey } from './shared/utils.js';
-import { initComments } from './comments-handler.js';
+import { isEscapeKey } from '../shared/utils.js';
+import { initComments } from '../comments/';
 
 const modalElement = document.querySelector('.big-picture');
 const bodyElement = document.querySelector('body');
@@ -46,7 +46,7 @@ const initModalContent = (url, description, likes) => {
   }
 };
 
-export const openPictureModal = (url, description, likes, comments) => {
+const openPictureModal = (url, description, likes, comments) => {
   controller = new AbortController();
   const { signal } = controller;
   const commentsElements = {

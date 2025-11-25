@@ -1,4 +1,4 @@
-import { eventBus } from './shared/event-bus.js';
+import { eventBus } from '../shared/event-bus.js';
 
 const pictureFiltersElement = document.querySelector('.img-filters');
 const defaultFilterButtonElement = pictureFiltersElement.querySelector('#filter-default');

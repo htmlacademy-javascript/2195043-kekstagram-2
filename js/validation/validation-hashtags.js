@@ -1,4 +1,4 @@
-import { failure, success } from './shared/utils.js';
+import { failure, success } from '../shared/utils.js';
 
 const HASHTAG_PATTERN = /^#[a-zа-яё0-9]{1,19}$/i;
 const MAX_HASHTAGS = 5;
@@ -39,7 +39,7 @@ const getHashtagValidation = (value) => value
   );
 
 
-export const validateHashtags = (value) => {
+const validateHashtags = (value) => {
   const {ok, errors} = getHashtagValidation(value);
 
   if (ok) {

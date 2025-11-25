@@ -1,4 +1,4 @@
-import { success, failure } from './shared/utils.js';
+import { success, failure } from '../shared/utils.js';
 
 const buildCommentNode = (comment) => {
   const { avatar, message, name } = comment;
