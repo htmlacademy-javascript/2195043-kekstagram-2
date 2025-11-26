@@ -4,6 +4,7 @@ const SCALE_MIN = 25;
 const SCALE_MAX = 100;
 const SCALE_STEP = 25;
 const DEFAULT_SCALE = 100;
+const SCALE_PERCENT_BASE = 100;
 
 const scaleDecreaseButtonElement = document.querySelector('.scale__control--smaller');
 const scaleIncreaseButtonElement = document.querySelector('.scale__control--bigger');
@@ -12,7 +13,7 @@ const imagePreviewElement = document.querySelector('.img-upload__preview img');
 
 const setScale = (value, scaleValueInput, preview) => {
   scaleValueInput.setAttribute('value', `${value}%`);
-  preview.style.transform = `scale(${value / 100})`;
+  preview.style.transform = `scale(${value / SCALE_PERCENT_BASE})`;
 };
 
 const resetScale = () => {

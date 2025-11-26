@@ -1,5 +1,7 @@
 import { notificationHandler } from './notification-handler.js';
 
+const TOAST_DISMISS_DELAY_MS = 5000;
+
 const dataErrorTemplateElement = document
   .querySelector('#data-error')
   ?.content?.querySelector('.data-error');
@@ -7,7 +9,7 @@ const dataErrorTemplateElement = document
 const handleRemoveNode = (node) => {
   setTimeout(() => {
     node.remove();
-  }, 5000);
+  }, TOAST_DISMISS_DELAY_MS);
 };
 
 export const showDataErrorToast = (errorMessage) => {

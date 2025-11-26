@@ -6,6 +6,8 @@ import { sendData } from '../shared/fetch.js';
 import { BASE_API } from '../shared/constants.js';
 import { showErrorPopup, showSuccessPopup } from '../notification/';
 
+const VALIDATOR_PRIORITY = 2;
+
 const containerElement = document.querySelector('.img-upload');
 const inputFileElement = containerElement?.querySelector('.img-upload__input');
 
@@ -27,14 +29,14 @@ const initPictureFormValidator = () => {
     hashtagsInputElement,
     isValidHashtags,
     hashtagsErrorMessage,
-    2,
+    VALIDATOR_PRIORITY,
     false
   );
 
   pristineInstance.addValidator(
     descriptionInputElement, validateDescription,
     descriptionErrorMessage,
-    2,
+    VALIDATOR_PRIORITY,
     false
   );
 };

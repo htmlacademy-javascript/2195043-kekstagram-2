@@ -7,6 +7,7 @@ import { eventBus } from './shared/event-bus.js';
 import { debounce } from './shared/debounce.js';
 import { filterPicturesBy } from './shared/utils.js';
 
+const DEBOUNCE_TIMEOUT_DELAY = 500;
 const picturesData = await fetchData(`${BASE_API}/data`);
 
 if (picturesData.ok) {
@@ -16,7 +17,7 @@ if (picturesData.ok) {
   throw new Error(picturesData.error);
 }
 
-const debouncedRender = debounce(renderPictures);
+const debouncedRender = debounce(renderPictures, DEBOUNCE_TIMEOUT_DELAY);
 
 eventBus.subscribe('filterPicturesChange', (filter) => {
   const filteredPictures = filterPicturesBy(filter, picturesData.value);
