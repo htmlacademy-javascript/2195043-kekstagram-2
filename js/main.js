@@ -8,13 +8,12 @@ import { debounce } from './shared/debounce.js';
 import { filterPicturesBy } from './shared/utils.js';
 
 const DEBOUNCE_TIMEOUT_DELAY = 500;
-const picturesData = await fetchData(`${BASE_API}/data`);
+const picturesData = await fetchData(`${BASE_API}/dakta`);
 
 if (picturesData.ok) {
   eventBus.publish('fetchPicturesData:success');
 } else {
   showDataErrorToast(picturesData.error);
-  throw new Error(picturesData.error);
 }
 
 const debouncedRender = debounce(renderPictures, DEBOUNCE_TIMEOUT_DELAY);
@@ -24,7 +23,7 @@ eventBus.subscribe('filterPicturesChange', (filter) => {
   debouncedRender(filteredPictures);
 });
 
-initRenderFilteredPictures(picturesData.value);
-initPictureModal(picturesData.value);
 initUploadPictureModal();
 initUploadPictureForm();
+initRenderFilteredPictures(picturesData.value);
+initPictureModal(picturesData.value);
