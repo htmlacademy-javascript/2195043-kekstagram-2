@@ -8,7 +8,7 @@ import { debounce } from './shared/debounce.js';
 import { filterPicturesBy } from './shared/utils.js';
 
 const DEBOUNCE_TIMEOUT_DELAY = 500;
-const picturesData = await fetchData(`${BASE_API}/dakta`);
+const picturesData = await fetchData(`${BASE_API}/data`);
 
 if (picturesData.ok) {
   eventBus.publish('fetchPicturesData:success');
