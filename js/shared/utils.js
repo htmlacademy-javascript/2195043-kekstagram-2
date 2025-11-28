@@ -17,7 +17,7 @@ export const filterPicturesBy = (filter, pictures) => {
   const filters = {
     default: () => pictures,
     random: () => getRandomSlice(pictures, RANDOM_SLICE_LENGTH),
-    discussed: () => pictures.sort((a, b) => b.comments.length - a.comments.length)
+    discussed: () => pictures.toSorted((a, b) => b.comments.length - a.comments.length)
   };
 
   return filters[filter]?.();
