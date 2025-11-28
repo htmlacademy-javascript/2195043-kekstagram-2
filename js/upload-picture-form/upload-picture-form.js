@@ -7,6 +7,7 @@ import { BASE_API } from '../shared/constants.js';
 import { showErrorPopup, showSuccessPopup } from '../notification/';
 
 const VALIDATOR_PRIORITY = 2;
+const IMAGE_FILE_PATTERN = /\.(png|jpg|jpeg)$/;
 
 const containerElement = document.querySelector('.img-upload');
 const inputFileElement = containerElement?.querySelector('.img-upload__input');
@@ -15,6 +16,8 @@ const formElement = containerElement?.querySelector('.img-upload__form');
 const hashtagsInputElement = formElement?.querySelector('.text__hashtags');
 const descriptionInputElement = formElement?.querySelector('.text__description');
 const submitButtonElement = formElement?.querySelector('.img-upload__submit');
+
+const uploadPicturePreview = document.querySelector('.img-upload__preview img');
 
 let pristineInstance;
 
@@ -62,8 +65,8 @@ const handleSubmitForm = async (event) => {
 
   setSubmitButtonDisabled(true);
 
-  const data = new FormData(formElement);
-  const result = await sendData(BASE_API, data);
+  const formData = new FormData(formElement);
+  const result = await sendData(BASE_API, formData);
 
   if (result.ok) {
     handleFormReset();
@@ -79,7 +82,16 @@ const handleSubmitForm = async (event) => {
 export const initUploadPictureForm = () => {
   initPictureFormValidator();
 
-  inputFileElement.addEventListener('change', openUploadPictureModal);
+  inputFileElement.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+
+    if (!IMAGE_FILE_PATTERN.test(file.name)) {
+      return;
+    }
+
+    uploadPicturePreview.src = URL.createObjectURL(file);
+    openUploadPictureModal();
+  });
 
   hashtagsInputElement.addEventListener('focus', handleInputFocus);
   hashtagsInputElement.addEventListener('blur', handleInputBlur);
