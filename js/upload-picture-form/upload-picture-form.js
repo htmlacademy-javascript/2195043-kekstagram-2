@@ -11,13 +11,12 @@ const IMAGE_FILE_PATTERN = /\.(png|jpg|jpeg)$/;
 
 const containerElement = document.querySelector('.img-upload');
 const inputFileElement = containerElement?.querySelector('.img-upload__input');
-
 const formElement = containerElement?.querySelector('.img-upload__form');
 const hashtagsInputElement = formElement?.querySelector('.text__hashtags');
 const descriptionInputElement = formElement?.querySelector('.text__description');
 const submitButtonElement = formElement?.querySelector('.img-upload__submit');
-
-const uploadPicturePreview = document.querySelector('.img-upload__preview img');
+const uploadPicturePreviewElement = formElement?.querySelector('.img-upload__preview img');
+const effectPreviewElements = formElement?.querySelectorAll('.effects__preview');
 
 let pristineInstance;
 
@@ -79,17 +78,35 @@ const handleSubmitForm = async (event) => {
   setSubmitButtonDisabled(false);
 };
 
+const getInputFile = (event) => {
+  const file = event.target.files[0];
+
+  if (!IMAGE_FILE_PATTERN.test(file.name)) {
+    return;
+  }
+
+  return file;
+};
+
+const setPreviewFile = (file, previewElement) => {
+  previewElement.src = URL.createObjectURL(file);
+};
+
+const setEffectsPreviewFile = (file, allPreviewElements) => {
+  const elements = Array.from(allPreviewElements);
+  elements.forEach((element) => {
+    element.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
+  });
+};
+
 export const initUploadPictureForm = () => {
   initPictureFormValidator();
 
   inputFileElement.addEventListener('change', (event) => {
-    const file = event.target.files[0];
+    const file = getInputFile(event);
 
-    if (!IMAGE_FILE_PATTERN.test(file.name)) {
-      return;
-    }
-
-    uploadPicturePreview.src = URL.createObjectURL(file);
+    setPreviewFile(file, uploadPicturePreviewElement);
+    setEffectsPreviewFile(file, effectPreviewElements);
     openUploadPictureModal();
   });
 
