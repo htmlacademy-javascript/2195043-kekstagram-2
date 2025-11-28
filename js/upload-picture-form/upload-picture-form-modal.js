@@ -1,4 +1,5 @@
-import { isEscapeKey, eventBus } from './utils.js';
+import { eventBus } from '../shared/event-bus.js';
+import { isEscapeKey } from '../shared/utils.js';
 
 const bodyElement = document.querySelector('body');
 const containerElement = document.querySelector('.img-upload');
@@ -15,7 +16,7 @@ const hideModal = () => {
 const closeModal = () => {
   hideModal();
   controller?.abort();
-  eventBus.publish('uploadPictureModal:closed');
+  eventBus.publish('uploadPictureFormModal:closed');
 };
 
 const handleKeydown = (event) => {
@@ -51,7 +52,7 @@ export const openUploadPictureModal = () => {
 };
 
 export const initUploadPictureModal = () => {
-  eventBus.subscribe('uploadPictureModal:enableEscape', enableEscapeClose);
-  eventBus.subscribe('uploadPictureModal:disableEscape', disableEscapeClose);
-  eventBus.subscribe('uploadPictureModal:needClose', closeModal);
+  eventBus.subscribe('uploadPictureFormModal:enableEscape', enableEscapeClose);
+  eventBus.subscribe('uploadPictureFormModal:disableEscape', disableEscapeClose);
+  eventBus.subscribe('uploadPictureFormModal:needClose', closeModal);
 };

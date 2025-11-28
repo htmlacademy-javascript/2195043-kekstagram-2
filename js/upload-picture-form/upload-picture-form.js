@@ -1,19 +1,22 @@
-import { isValidHashtags, hashtagsErrorMessage } from './validation-hashtags.js';
-import { descriptionErrorMessage, validateDescription } from './validation-description.js';
-import { openUploadPictureModal } from './upload-picture-modal.js';
-import { initPictureEditHandler } from './picture-edit-handler.js';
-import { eventBus, sendData } from './utils.js';
-import { BASE_API } from './constants.js';
-import { initUploadFormErrorPopup } from './upload-form-error-popup.js';
-import { initUploadFormSuccessPopup } from './upload-form-success-popup.js';
+import { descriptionErrorMessage, validateDescription, hashtagsErrorMessage, isValidHashtags } from '../validation/';
+import { openUploadPictureModal } from './upload-picture-form-modal.js';
+import { initPictureEditHandler } from '../picture-edit/';
+import { eventBus } from '../shared/event-bus.js';
+import { sendData } from '../shared/fetch.js';
+import { BASE_API } from '../shared/constants.js';
+import { showErrorPopup, showSuccessPopup } from '../notification/';
+
+const VALIDATOR_PRIORITY = 2;
+const IMAGE_FILE_PATTERN = /\.(png|jpg|jpeg)$/;
 
 const containerElement = document.querySelector('.img-upload');
 const inputFileElement = containerElement?.querySelector('.img-upload__input');
-
 const formElement = containerElement?.querySelector('.img-upload__form');
 const hashtagsInputElement = formElement?.querySelector('.text__hashtags');
 const descriptionInputElement = formElement?.querySelector('.text__description');
 const submitButtonElement = formElement?.querySelector('.img-upload__submit');
+const uploadPicturePreviewElement = formElement?.querySelector('.img-upload__preview img');
+const effectPreviewElements = formElement?.querySelectorAll('.effects__preview');
 
 let pristineInstance;
 
@@ -28,24 +31,24 @@ const initPictureFormValidator = () => {
     hashtagsInputElement,
     isValidHashtags,
     hashtagsErrorMessage,
-    2,
+    VALIDATOR_PRIORITY,
     false
   );
 
   pristineInstance.addValidator(
     descriptionInputElement, validateDescription,
     descriptionErrorMessage,
-    2,
+    VALIDATOR_PRIORITY,
     false
   );
 };
 
 const handleInputFocus = () => {
-  eventBus.publish('uploadPictureModal:disableEscape');
+  eventBus.publish('uploadPictureFormModal:disableEscape');
 };
 
 const handleInputBlur = () => {
-  eventBus.publish('uploadPictureModal:enableEscape');
+  eventBus.publish('uploadPictureFormModal:enableEscape');
 };
 
 const handleFormReset = () => {
@@ -61,24 +64,51 @@ const handleSubmitForm = async (event) => {
 
   setSubmitButtonDisabled(true);
 
-  const data = new FormData(formElement);
-  const result = await sendData(BASE_API, data);
+  const formData = new FormData(formElement);
+  const result = await sendData(BASE_API, formData);
 
   if (result.ok) {
     handleFormReset();
-    eventBus.publish('uploadPictureModal:needClose');
-    initUploadFormSuccessPopup('Успех!');
+    eventBus.publish('uploadPictureFormModal:needClose');
+    showSuccessPopup('Успех!');
   } else {
-    initUploadFormErrorPopup('Провал!');
+    showErrorPopup('Провал!');
   }
 
   setSubmitButtonDisabled(false);
 };
 
+const getInputFile = (event) => {
+  const file = event.target.files[0];
+
+  if (!IMAGE_FILE_PATTERN.test(file.name)) {
+    return;
+  }
+
+  return file;
+};
+
+const setPreviewFile = (file, previewElement) => {
+  previewElement.src = URL.createObjectURL(file);
+};
+
+const setEffectsPreviewFile = (file, allPreviewElements) => {
+  const elements = Array.from(allPreviewElements);
+  elements.forEach((element) => {
+    element.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
+  });
+};
+
 export const initUploadPictureForm = () => {
   initPictureFormValidator();
 
-  inputFileElement.addEventListener('change', openUploadPictureModal);
+  inputFileElement.addEventListener('change', (event) => {
+    const file = getInputFile(event);
+
+    setPreviewFile(file, uploadPicturePreviewElement);
+    setEffectsPreviewFile(file, effectPreviewElements);
+    openUploadPictureModal();
+  });
 
   hashtagsInputElement.addEventListener('focus', handleInputFocus);
   hashtagsInputElement.addEventListener('blur', handleInputBlur);
@@ -94,7 +124,7 @@ export const initUploadPictureForm = () => {
 
   formElement.addEventListener('submit', handleSubmitForm);
 
-  eventBus.subscribe('uploadPictureModal:closed', handleFormReset);
+  eventBus.subscribe('uploadPictureFormModal:closed', handleFormReset);
 
-  initPictureEditHandler('uploadPictureModal:closed');
+  initPictureEditHandler('uploadPictureFormModal:closed');
 };

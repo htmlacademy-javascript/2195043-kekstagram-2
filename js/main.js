@@ -1,30 +1,29 @@
-import { renderPictures } from './render-pictures.js';
-import { initPictureModal } from './picture-handler.js';
-import { initUploadPictureForm } from './upload-picture-form.js';
-import { initUploadPictureModal } from './upload-picture-modal.js';
-import { initDataErrorToast } from './data-fetch-error-toast.js';
-import { fetchData } from './utils.js';
-import { BASE_API } from './constants.js';
+import { initRenderFilteredPictures, renderPictures, initPictureModal } from './pictures/';
+import { initUploadPictureForm, initUploadPictureModal } from './upload-picture-form/';
+import { showDataErrorToast } from './notification/';
+import { fetchData } from './shared/fetch.js';
+import { BASE_API } from './shared/constants.js';
+import { eventBus } from './shared/event-bus.js';
+import { debounce } from './shared/debounce.js';
+import { filterPicturesBy } from './shared/utils.js';
 
-const pictureTemplateElement = document
-  .querySelector('#picture')
-  ?.content?.querySelector('.picture');
-const picturesContainerElement = document.querySelector('.pictures');
-
+const DEBOUNCE_TIMEOUT_DELAY = 500;
 const picturesData = await fetchData(`${BASE_API}/data`);
 
-initDataErrorToast(!picturesData.ok, picturesData.error);
-
-const picturesRenderResult = renderPictures(
-  picturesData.value,
-  pictureTemplateElement,
-  picturesContainerElement
-);
-
-if (!picturesRenderResult.ok) {
-  throw new Error(picturesRenderResult.error);
+if (picturesData.ok) {
+  eventBus.publish('fetchPicturesData:success');
+} else {
+  showDataErrorToast(picturesData.error);
 }
 
-initPictureModal(picturesData.value, picturesContainerElement);
+const debouncedRender = debounce(renderPictures, DEBOUNCE_TIMEOUT_DELAY);
+
+eventBus.subscribe('filterPicturesChange', (filter) => {
+  const filteredPictures = filterPicturesBy(filter, picturesData.value);
+  debouncedRender(filteredPictures);
+});
+
 initUploadPictureModal();
 initUploadPictureForm();
+initRenderFilteredPictures(picturesData.value);
+initPictureModal(picturesData.value);

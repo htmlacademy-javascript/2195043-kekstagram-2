@@ -1,7 +1,8 @@
-import { failure, success } from './utils.js';
+import { failure, success } from '../shared/utils.js';
 
 const HASHTAG_PATTERN = /^#[a-zа-яё0-9]{1,19}$/i;
-const MAX_HASHTAGS = 5;
+const MAX_HASHTAG_COUNT = 5;
+const MAX_HASHTAG_SYMBOLS = 20;
 
 const getHashtagValidation = (value) => value
   .toLowerCase()
@@ -18,7 +19,7 @@ const getHashtagValidation = (value) => value
         result.ok = false;
       }
 
-      if (result.items.length >= MAX_HASHTAGS) {
+      if (result.items.length >= MAX_HASHTAG_COUNT) {
         result.errors.exceedsMaxCount = true;
         result.ok = false;
         return result;
@@ -39,7 +40,7 @@ const getHashtagValidation = (value) => value
   );
 
 
-export const validateHashtags = (value) => {
+const validateHashtags = (value) => {
   const {ok, errors} = getHashtagValidation(value);
 
   if (ok) {
@@ -49,13 +50,13 @@ export const validateHashtags = (value) => {
   const errorMessages = [];
 
   if (errors.hasInvalidSymbols) {
-    errorMessages.push('Хэштег должен начинаться с # и содержать только латинские/кириллические буквы и цифры. Максимальная длина не должна превышать 20 символов.');
+    errorMessages.push(`Хэштег должен начинаться с # и содержать только латинские/кириллические буквы и цифры. Максимальная длина не должна превышать ${MAX_HASHTAG_SYMBOLS} символов.`);
   }
   if (errors.hasDuplicates) {
     errorMessages.push('Хэштеги не должны повторяться.');
   }
   if (errors.exceedsMaxCount) {
-    errorMessages.push('Количество хэштегов не должно быть больше 5');
+    errorMessages.push(`Количество хэштегов не должно быть больше ${MAX_HASHTAG_COUNT}`);
   }
 
   const hashtagErrorMessage = errorMessages.join('\n');

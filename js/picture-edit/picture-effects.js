@@ -1,5 +1,5 @@
 import { pictureEffectsConfig } from './picture-effects-config.js';
-import { eventBus } from './utils.js';
+import { eventBus } from '../shared/event-bus.js';
 
 const effectRadioElements = document.querySelectorAll('.effects__radio');
 const effectLevelElement = document.querySelector('.img-upload__effect-level');

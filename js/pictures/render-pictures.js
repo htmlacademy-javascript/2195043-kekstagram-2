@@ -1,8 +1,11 @@
-import { success, failure } from './utils.js';
+const templateElement = document
+  .querySelector('#picture')
+  ?.content?.querySelector('.picture');
+const containerElement = document.querySelector('.pictures');
 
-const buildPictureNode = (picture, templateElement) => {
+const buildPictureNode = (picture, template) => {
   const { id, url, description, likes, comments } = picture;
-  const node = templateElement.cloneNode(true);
+  const node = template.cloneNode(true);
   const img = node.querySelector('.picture__img');
   img.src = url;
   img.alt = description;
@@ -12,13 +15,9 @@ const buildPictureNode = (picture, templateElement) => {
   return node;
 };
 
-export const renderPictures = (pictures, templateElement, containerElement) => {
-  if (!templateElement || !containerElement) {
-    return failure('Отсутствуют обязательные элементы');
-  }
-
+export const renderPictures = (pictures) => {
   if (!Array.isArray(pictures) || pictures.length === 0) {
-    return failure('Некорректный массив изображений');
+    throw new Error('Некорректный массив изображений');
   }
 
   const existingPictures = containerElement.querySelectorAll('.picture');
@@ -30,6 +29,4 @@ export const renderPictures = (pictures, templateElement, containerElement) => {
     .forEach((node) => fragment.append(node));
 
   containerElement.append(fragment);
-
-  return success(containerElement);
 };
