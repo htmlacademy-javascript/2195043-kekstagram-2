@@ -52,7 +52,9 @@ const handleInputBlur = () => {
 };
 
 const handleFormReset = () => {
-  formElement?.reset();
+  if (formElement) {
+    formElement?.reset();
+  }
 };
 
 const setSubmitButtonDisabled = (isDisabled) => {
@@ -104,11 +106,12 @@ export const initUploadPictureForm = () => {
 
   inputFileElement.addEventListener('change', (event) => {
     const file = getInputFile(event);
+    openUploadPictureModal();
 
     setPreviewFile(file, uploadPicturePreviewElement);
     setEffectsPreviewFile(file, effectPreviewElements);
-    openUploadPictureModal();
   });
+
 
   hashtagsInputElement.addEventListener('focus', handleInputFocus);
   hashtagsInputElement.addEventListener('blur', handleInputBlur);

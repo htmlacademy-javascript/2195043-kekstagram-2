@@ -30,6 +30,15 @@ const setActiveButton = (filter) => {
   filters[filter]?.();
 };
 
+const getFilterByButton = (button) => {
+  const map = {
+    'filter-default': 'default',
+    'filter-random': 'random',
+    'filter-discussed': 'discussed'
+  };
+  return map[button.id] || null;
+};
+
 const handleFilterChange = (filter) => {
   if (currentFilter === filter) {
     return;
@@ -41,23 +50,17 @@ const handleFilterChange = (filter) => {
 };
 
 
-export const initRenderFilteredPictures = (pictures) => {
-  if (!Array.isArray(pictures) || pictures.length === 0) {
-    throw new Error('Некорректный массив изображений');
-  }
-
+export const initRenderFilteredPictures = () => {
   eventBus.subscribe('fetchPicturesData:success', visibleFilters());
   eventBus.publish('filterPicturesChange', currentFilter);
 
-  defaultFilterButtonElement.addEventListener('click', () => {
-    handleFilterChange('default');
-  });
+  pictureFiltersElement.addEventListener('click', (event) => {
+    const button = event.target.closest('.img-filters__button');
+    const filter = getFilterByButton(button);
+    if (!filter) {
+      return;
+    }
 
-  randomFilterButtonElement.addEventListener('click', () => {
-    handleFilterChange('random');
-  });
-
-  discussedFilterButtonElement.addEventListener('click', () => {
-    handleFilterChange('discussed');
+    handleFilterChange(filter);
   });
 };

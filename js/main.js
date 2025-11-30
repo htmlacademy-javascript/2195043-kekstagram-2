@@ -25,5 +25,5 @@ eventBus.subscribe('filterPicturesChange', (filter) => {
 
 initUploadPictureModal();
 initUploadPictureForm();
-initRenderFilteredPictures(picturesData.value);
+initRenderFilteredPictures();
 initPictureModal(picturesData.value);
