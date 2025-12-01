@@ -3,27 +3,22 @@ import { initUploadPictureForm, initUploadPictureModal } from './upload-picture-
 import { showDataErrorToast } from './notification/';
 import { fetchData } from './shared/fetch.js';
 import { BASE_API } from './shared/constants.js';
-import { eventBus } from './shared/event-bus.js';
 import { debounce } from './shared/debounce.js';
-import { filterPicturesBy } from './shared/utils.js';
 
 const DEBOUNCE_TIMEOUT_DELAY = 500;
-const picturesData = await fetchData(`${BASE_API}/data`);
 
-if (picturesData.ok) {
-  eventBus.publish('fetchPicturesData:success');
-} else {
-  showDataErrorToast(picturesData.error);
-}
 
-const debouncedRender = debounce(renderPictures, DEBOUNCE_TIMEOUT_DELAY);
+fetchData(`${BASE_API}/data`)
+  .then((picturesData) => {
+    const debouncedRender = debounce(renderPictures, DEBOUNCE_TIMEOUT_DELAY);
 
-eventBus.subscribe('filterPicturesChange', (filter) => {
-  const filteredPictures = filterPicturesBy(filter, picturesData.value);
-  debouncedRender(filteredPictures);
-});
+    initRenderFilteredPictures(picturesData, debouncedRender);
+    initPictureModal(picturesData);
+  })
+  .catch((error) => {
+    showDataErrorToast(error.message);
+  });
+
 
 initUploadPictureModal();
 initUploadPictureForm();
-initRenderFilteredPictures();
-initPictureModal(picturesData.value);

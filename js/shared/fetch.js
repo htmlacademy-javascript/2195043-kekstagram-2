@@ -3,11 +3,11 @@ import { success, failure } from './utils.js';
 export const fetchData = async (url) => {
   const response = await fetch(url);
   if (!response.ok) {
-    return failure('Никогда такого не было и вот опять!');
+    throw new Error('Никогда такого не было и вот опять!');
   }
-  const data = await response.json();
-  return success(data);
+  return await response.json();
 };
+
 
 export const sendData = async (url, data) => {
   const response = await fetch(url, {
