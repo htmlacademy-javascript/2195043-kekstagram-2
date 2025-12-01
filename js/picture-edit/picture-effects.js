@@ -60,7 +60,7 @@ export const initPictureEffects = (triggerResetEvent) => {
   }
 
   const onSliderUpdate = (value) => {
-    effectLevelValueElement.value = value;
+    effectLevelValueElement.setAttribute('value', String(Number(value)));
     const { filter, unit } = pictureEffectsConfig[currentEffect];
     applyEffect(filter, value, unit, imagePreviewElement);
   };
@@ -79,7 +79,7 @@ export const initPictureEffects = (triggerResetEvent) => {
       updateSliderOptions(sliderElement, settings.slider);
 
       applyEffect(settings.filter, settings.slider.start, settings.unit, imagePreviewElement);
-      effectLevelValueElement.value = settings.slider.start;
+      effectLevelValueElement.setAttribute('value', settings.slider.start);
     })
   );
 

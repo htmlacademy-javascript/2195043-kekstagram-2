@@ -1,5 +1,3 @@
-import { success, failure } from './utils.js';
-
 export const fetchData = async (url) => {
   const response = await fetch(url);
   if (!response.ok) {
@@ -15,7 +13,7 @@ export const sendData = async (url, data) => {
     body: data,
   });
   if (!response.ok) {
-    return failure(await response.json());
+    throw new Error(await response.json());
   }
-  return success(await response.json());
+  return response.json();
 };

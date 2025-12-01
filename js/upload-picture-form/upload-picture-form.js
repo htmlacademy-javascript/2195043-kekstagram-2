@@ -67,17 +67,19 @@ const handleSubmitForm = async (event) => {
   setSubmitButtonDisabled(true);
 
   const formData = new FormData(formElement);
-  const result = await sendData(BASE_API, formData);
 
-  if (result.ok) {
-    handleFormReset();
-    eventBus.publish('uploadPictureFormModal:needClose');
-    showSuccessPopup('Успех!');
-  } else {
-    showErrorPopup('Провал!');
-  }
-
-  setSubmitButtonDisabled(false);
+  sendData(BASE_API, formData)
+    .then(() => {
+      handleFormReset();
+      eventBus.publish('uploadPictureFormModal:needClose');
+      showSuccessPopup('Успех!');
+    })
+    .catch(() => {
+      showErrorPopup('Провал!');
+    })
+    .finally(() => {
+      setSubmitButtonDisabled(false);
+    });
 };
 
 const getInputFile = (event) => {
