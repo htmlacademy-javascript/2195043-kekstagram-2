@@ -55,13 +55,14 @@ const handleFormReset = () => {
   if (formElement) {
     formElement?.reset();
   }
+  pristineInstance.reset();
 };
 
 const setSubmitButtonDisabled = (isDisabled) => {
   submitButtonElement.disabled = isDisabled;
 };
 
-const handleSubmitForm = async (event) => {
+const handleSubmitForm = (event) => {
   event.preventDefault();
 
   setSubmitButtonDisabled(true);
