@@ -13,14 +13,12 @@
   "devDependencies": {
     "eslint": "8.48.0",
     "eslint-config-htmlacademy": "9.1.1",
-    "husky": "^9.1.7",
     "vite": "4.4.9"
   },
   "license": "MIT",
   "scripts": {
     "start": "vite --port 3000",
-    "lint": "eslint js/",
-    "prepare": "husky"
+    "lint": "eslint js/"
   },
   "engines": {
     "node": "^20",
