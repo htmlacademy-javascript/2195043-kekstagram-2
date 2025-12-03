@@ -52,30 +52,35 @@ const handleInputBlur = () => {
 };
 
 const handleFormReset = () => {
-  formElement?.reset();
+  if (formElement) {
+    formElement?.reset();
+  }
+  pristineInstance.reset();
 };
 
 const setSubmitButtonDisabled = (isDisabled) => {
   submitButtonElement.disabled = isDisabled;
 };
 
-const handleSubmitForm = async (event) => {
+const handleSubmitForm = (event) => {
   event.preventDefault();
 
   setSubmitButtonDisabled(true);
 
   const formData = new FormData(formElement);
-  const result = await sendData(BASE_API, formData);
 
-  if (result.ok) {
-    handleFormReset();
-    eventBus.publish('uploadPictureFormModal:needClose');
-    showSuccessPopup('Успех!');
-  } else {
-    showErrorPopup('Провал!');
-  }
-
-  setSubmitButtonDisabled(false);
+  sendData(BASE_API, formData)
+    .then(() => {
+      handleFormReset();
+      eventBus.publish('uploadPictureFormModal:needClose');
+      showSuccessPopup('Успех!');
+    })
+    .catch(() => {
+      showErrorPopup('Провал!');
+    })
+    .finally(() => {
+      setSubmitButtonDisabled(false);
+    });
 };
 
 const getInputFile = (event) => {
@@ -104,11 +109,12 @@ export const initUploadPictureForm = () => {
 
   inputFileElement.addEventListener('change', (event) => {
     const file = getInputFile(event);
+    openUploadPictureModal();
 
     setPreviewFile(file, uploadPicturePreviewElement);
     setEffectsPreviewFile(file, effectPreviewElements);
-    openUploadPictureModal();
   });
+
 
   hashtagsInputElement.addEventListener('focus', handleInputFocus);
   hashtagsInputElement.addEventListener('blur', handleInputBlur);

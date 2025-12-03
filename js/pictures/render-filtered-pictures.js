@@ -1,63 +1,66 @@
-import { eventBus } from '../shared/event-bus.js';
+import { filterPicturesBy } from '../shared/utils.js';
 
 const pictureFiltersElement = document.querySelector('.img-filters');
 const defaultFilterButtonElement = pictureFiltersElement.querySelector('#filter-default');
 const randomFilterButtonElement = pictureFiltersElement.querySelector('#filter-random');
 const discussedFilterButtonElement = pictureFiltersElement.querySelector('#filter-discussed');
 
+const buttons = [
+  defaultFilterButtonElement,
+  randomFilterButtonElement,
+  discussedFilterButtonElement,
+];
+
 let currentFilter = 'default';
-const buttons = [defaultFilterButtonElement, randomFilterButtonElement, discussedFilterButtonElement];
 
 const visibleFilters = () => {
   pictureFiltersElement.classList.remove('img-filters--inactive');
 };
 
-const setActiveButton = (filter) => {
-  buttons.forEach((button) => button.classList.remove('img-filters__button--active'));
-
-  const filters = {
-    default: () => {
-      defaultFilterButtonElement.classList.add('img-filters__button--active');
-    },
-    random: () => {
-      randomFilterButtonElement.classList.add('img-filters__button--active');
-    },
-    discussed: () => {
-      discussedFilterButtonElement.classList.add('img-filters__button--active');
-    }
-  };
-
-  filters[filter]?.();
+const setActiveButton = (button) => {
+  buttons.forEach((btn) => btn.classList.remove('img-filters__button--active'));
+  button.classList.add('img-filters__button--active');
 };
 
-const handleFilterChange = (filter) => {
+const getFilterByButton = (button) => {
+  const filterMap = {
+    'filter-default': 'default',
+    'filter-random': 'random',
+    'filter-discussed': 'discussed',
+  };
+  return filterMap[button.id];
+};
+
+const renderFilteredPictures = (filter, pictures, render) => {
+  const button = buttons.find((btn) => getFilterByButton(btn) === filter);
+  setActiveButton(button);
+  const filteredPictures = filterPicturesBy(filter, pictures);
+  render(filteredPictures);
+};
+
+const handleFilterChange = (filter, pictures, render) => {
   if (currentFilter === filter) {
     return;
   }
-
   currentFilter = filter;
-  setActiveButton(filter);
-  eventBus.publish('filterPicturesChange', filter);
+  renderFilteredPictures(filter, pictures, render);
 };
 
+export const initRenderFilteredPictures = (pictures, render) => {
+  visibleFilters();
+  renderFilteredPictures(currentFilter, pictures, render);
 
-export const initRenderFilteredPictures = (pictures) => {
-  if (!Array.isArray(pictures) || pictures.length === 0) {
-    throw new Error('Некорректный массив изображений');
-  }
+  pictureFiltersElement.addEventListener('click', (event) => {
+    const button = event.target.closest('.img-filters__button');
+    if (!button) {
+      return;
+    }
 
-  eventBus.subscribe('fetchPicturesData:success', visibleFilters());
-  eventBus.publish('filterPicturesChange', currentFilter);
+    const filter = getFilterByButton(button);
+    if (!filter) {
+      return;
+    }
 
-  defaultFilterButtonElement.addEventListener('click', () => {
-    handleFilterChange('default');
-  });
-
-  randomFilterButtonElement.addEventListener('click', () => {
-    handleFilterChange('random');
-  });
-
-  discussedFilterButtonElement.addEventListener('click', () => {
-    handleFilterChange('discussed');
+    handleFilterChange(filter, pictures, render);
   });
 };

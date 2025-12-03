@@ -6,7 +6,8 @@ const MAX_HASHTAG_SYMBOLS = 20;
 
 const getHashtagValidation = (value) => value
   .toLowerCase()
-  .split(' ')
+  .split(/\s+/)
+  .filter(Boolean)
   .reduce(
     (result, hashtag) => {
       if (result.items.includes(hashtag)) {

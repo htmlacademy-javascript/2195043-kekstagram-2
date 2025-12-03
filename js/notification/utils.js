@@ -17,5 +17,18 @@ export const createPopupHandlers = (node, onEnableEscape = null) => {
     onEnableEscape?.();
   };
 
-  return Object.freeze({escapeHandler, closeButtonHandler});
+  const clickOverlayHandler = (event) => {
+    if (event.target === node) {
+      document.removeEventListener('keydown', escapeHandler);
+      document.removeEventListener('click', clickOverlayHandler);
+      node.remove();
+      onEnableEscape?.();
+    }
+  };
+
+  return Object.freeze({
+    escapeHandler,
+    closeButtonHandler,
+    clickOverlayHandler,
+  });
 };

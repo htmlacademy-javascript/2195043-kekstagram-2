@@ -7,12 +7,13 @@ const errorTemplateElement = document
   ?.content?.querySelector('.error');
 
 const handleRemoveNode = (node) => {
-  const { escapeHandler, closeButtonHandler } = createPopupHandlers(node, () => eventBus.publish('uploadPictureFormModal:enableEscape'));
+  const { escapeHandler, closeButtonHandler, clickOverlayHandler } = createPopupHandlers(node, () => eventBus.publish('uploadPictureFormModal:enableEscape'));
   const successCloseButton = node.querySelector('.error__button');
 
   successCloseButton.addEventListener('click', closeButtonHandler);
   eventBus.publish('uploadPictureFormModal:disableEscape');
   document.addEventListener('keydown', escapeHandler);
+  document.addEventListener('click', clickOverlayHandler);
 };
 
 export const showErrorPopup = (errorMessage) => {

@@ -6,11 +6,12 @@ const successTemplateElement = document
   ?.content?.querySelector('.success');
 
 const handleRemoveNode = (node) => {
-  const { escapeHandler, closeButtonHandler } = createPopupHandlers(node);
+  const { escapeHandler, closeButtonHandler, clickOverlayHandler } = createPopupHandlers(node);
   const successCloseButton = node.querySelector('.success__button');
 
   successCloseButton.addEventListener('click', closeButtonHandler);
   document.addEventListener('keydown', escapeHandler);
+  document.addEventListener('click', clickOverlayHandler);
 };
 
 export const showSuccessPopup = (successMessage) => {

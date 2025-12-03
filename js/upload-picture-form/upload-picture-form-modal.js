@@ -2,9 +2,8 @@ import { eventBus } from '../shared/event-bus.js';
 import { isEscapeKey } from '../shared/utils.js';
 
 const bodyElement = document.querySelector('body');
-const containerElement = document.querySelector('.img-upload');
-const modalOverlayElement = containerElement?.querySelector('.img-upload__overlay');
-const closeButtonElement = containerElement?.querySelector('.img-upload__cancel');
+const modalOverlayElement = document.querySelector('.img-upload__overlay');
+const closeButtonElement = document.querySelector('.img-upload__cancel');
 
 let controller;
 
@@ -31,25 +30,27 @@ const handleCloseButtonClick = (event) => {
   closeModal();
 };
 
-const enableEscapeClose = () => {
-  controller = new AbortController();
-  document?.addEventListener('keydown', handleKeydown, {signal: controller.signal});
-};
 
 const disableEscapeClose = () => {
   controller?.abort();
 };
 
-export const openUploadPictureModal = () => {
+const enableEscapeClose = () => {
+  if (controller) {
+    controller.abort();
+  }
   controller = new AbortController();
+  document.addEventListener('keydown', handleKeydown, { signal: controller.signal });
+};
 
+export const openUploadPictureModal = () => {
   modalOverlayElement?.classList.remove('hidden');
   bodyElement?.classList.add('modal-open');
 
   enableEscapeClose();
-
   closeButtonElement?.addEventListener('click', handleCloseButtonClick);
 };
+
 
 export const initUploadPictureModal = () => {
   eventBus.subscribe('uploadPictureFormModal:enableEscape', enableEscapeClose);
