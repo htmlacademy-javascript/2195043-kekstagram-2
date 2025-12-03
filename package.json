@@ -18,8 +18,7 @@
   "license": "MIT",
   "scripts": {
     "start": "vite --port 3000",
-    "lint": "eslint js/",
-    "prepare": "husky"
+    "lint": "eslint js/"
   },
   "engines": {
     "node": "^20",
