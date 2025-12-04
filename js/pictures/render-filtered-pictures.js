@@ -13,7 +13,7 @@ const buttons = [
 
 let currentFilter = 'default';
 
-const visibleFilters = () => {
+const showFilters = () => {
   pictureFiltersElement.classList.remove('img-filters--inactive');
 };
 
@@ -47,7 +47,7 @@ const handleFilterChange = (filter, pictures, render) => {
 };
 
 export const initRenderFilteredPictures = (pictures, render) => {
-  visibleFilters();
+  showFilters();
   renderFilteredPictures(currentFilter, pictures, render);
 
   pictureFiltersElement.addEventListener('click', (event) => {

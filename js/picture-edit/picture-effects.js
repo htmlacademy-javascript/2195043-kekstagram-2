@@ -9,6 +9,8 @@ const imagePreviewElement = document.querySelector('.img-upload__preview img');
 
 let currentEffect = 'none';
 
+const getDisplayByVisible = (isVisible) => isVisible ? 'block' : 'none';
+
 const applyEffect = (filter, value, unit, preview) => {
   preview.style.filter = filter ? `${filter}(${value}${unit})` : '';
 };
@@ -48,6 +50,7 @@ const updateSliderOptions = (element, config) => {
 
 const resetPictureEffects = () => {
   currentEffect = 'none';
+  effectLevelElement.style.display = getDisplayByVisible(false);
 
   if (sliderElement && sliderElement.noUiSlider) {
     sliderElement.noUiSlider.reset();
@@ -66,7 +69,7 @@ export const initPictureEffects = (triggerResetEvent) => {
   };
 
   createSlider(sliderElement, pictureEffectsConfig.none.slider, onSliderUpdate);
-  effectLevelElement.style.display = 'none';
+  effectLevelElement.style.display = getDisplayByVisible(false);
 
   effectRadioElements.forEach((radio) =>
     radio.addEventListener('change', () => {
@@ -74,7 +77,7 @@ export const initPictureEffects = (triggerResetEvent) => {
 
       const settings = pictureEffectsConfig[currentEffect];
 
-      effectLevelElement.style.display = settings.hideSlider ? 'none' : 'block';
+      effectLevelElement.style.display = getDisplayByVisible(!settings.hideSlider);
 
       updateSliderOptions(sliderElement, settings.slider);
 

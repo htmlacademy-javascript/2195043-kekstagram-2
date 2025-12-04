@@ -1,4 +1,4 @@
-import { descriptionErrorMessage, validateDescription, hashtagsErrorMessage, isValidHashtags } from '../validation/';
+import { descriptionErrorMessage, validateDescription, getHashtagsValidationResult, isValidHashtags } from '../validation/';
 import { openUploadPictureModal } from './upload-picture-form-modal.js';
 import { initPictureEditHandler } from '../picture-edit/';
 import { eventBus } from '../shared/event-bus.js';
@@ -30,7 +30,7 @@ const initPictureFormValidator = () => {
   pristineInstance.addValidator(
     hashtagsInputElement,
     isValidHashtags,
-    hashtagsErrorMessage,
+    getHashtagsValidationResult,
     VALIDATOR_PRIORITY,
     false
   );
@@ -43,11 +43,11 @@ const initPictureFormValidator = () => {
   );
 };
 
-const handleInputFocus = () => {
+const onHashtagsInputFocus = () => {
   eventBus.publish('uploadPictureFormModal:disableEscape');
 };
 
-const handleInputBlur = () => {
+const onHashtagsInputBlur = () => {
   eventBus.publish('uploadPictureFormModal:enableEscape');
 };
 
@@ -62,7 +62,7 @@ const setSubmitButtonDisabled = (isDisabled) => {
   submitButtonElement.disabled = isDisabled;
 };
 
-const handleSubmitForm = (event) => {
+const onFormSubmit = (event) => {
   event.preventDefault();
 
   setSubmitButtonDisabled(true);
@@ -116,19 +116,19 @@ export const initUploadPictureForm = () => {
   });
 
 
-  hashtagsInputElement.addEventListener('focus', handleInputFocus);
-  hashtagsInputElement.addEventListener('blur', handleInputBlur);
+  hashtagsInputElement.addEventListener('focus', onHashtagsInputFocus);
+  hashtagsInputElement.addEventListener('blur', onHashtagsInputBlur);
   hashtagsInputElement.addEventListener('input', () => {
     setSubmitButtonDisabled(!pristineInstance.validate());
   });
 
-  descriptionInputElement.addEventListener('focus', handleInputFocus);
-  descriptionInputElement.addEventListener('blur', handleInputBlur);
+  descriptionInputElement.addEventListener('focus', onHashtagsInputFocus);
+  descriptionInputElement.addEventListener('blur', onHashtagsInputBlur);
   descriptionInputElement.addEventListener('input', () => {
     setSubmitButtonDisabled(!pristineInstance.validate());
   });
 
-  formElement.addEventListener('submit', handleSubmitForm);
+  formElement.addEventListener('submit', onFormSubmit);
 
   eventBus.subscribe('uploadPictureFormModal:closed', handleFormReset);
 
