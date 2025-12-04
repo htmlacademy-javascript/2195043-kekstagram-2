@@ -11,12 +11,15 @@ const scaleIncreaseButtonElement = document.querySelector('.scale__control--bigg
 const scaleValueInputElement = document.querySelector('.scale__control--value');
 const imagePreviewElement = document.querySelector('.img-upload__preview img');
 
+let currentScale = DEFAULT_SCALE;
+
 const setScale = (value, scaleValueInput, preview) => {
   scaleValueInput.setAttribute('value', `${value}%`);
   preview.style.transform = `scale(${value / SCALE_PERCENT_BASE})`;
 };
 
 const resetScale = () => {
+  currentScale = DEFAULT_SCALE;
   setScale(DEFAULT_SCALE, scaleValueInputElement, imagePreviewElement);
 };
 
@@ -32,7 +35,6 @@ const changeScale = (value, delta) => {
 };
 
 export const initPictureScale = (triggerResetEvent) => {
-  let currentScale = DEFAULT_SCALE;
   setScale(currentScale, scaleValueInputElement, imagePreviewElement);
 
   scaleDecreaseButtonElement.addEventListener('click', () => {

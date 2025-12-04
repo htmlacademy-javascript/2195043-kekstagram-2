@@ -18,14 +18,14 @@ const closeModal = () => {
   eventBus.publish('uploadPictureFormModal:closed');
 };
 
-const handleKeydown = (event) => {
+const onDocumentKeydown = (event) => {
   if (isEscapeKey(event)) {
     event.preventDefault();
     closeModal();
   }
 };
 
-const handleCloseButtonClick = (event) => {
+const onCloseButtonClick = (event) => {
   event.preventDefault();
   closeModal();
 };
@@ -40,7 +40,7 @@ const enableEscapeClose = () => {
     controller.abort();
   }
   controller = new AbortController();
-  document.addEventListener('keydown', handleKeydown, { signal: controller.signal });
+  document.addEventListener('keydown', onDocumentKeydown, { signal: controller.signal });
 };
 
 export const openUploadPictureModal = () => {
@@ -48,7 +48,7 @@ export const openUploadPictureModal = () => {
   bodyElement?.classList.add('modal-open');
 
   enableEscapeClose();
-  closeButtonElement?.addEventListener('click', handleCloseButtonClick);
+  closeButtonElement?.addEventListener('click', onCloseButtonClick);
 };
 
 

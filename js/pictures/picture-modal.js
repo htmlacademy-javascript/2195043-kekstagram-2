@@ -18,14 +18,14 @@ const closeModal = () => {
   controller?.abort();
 };
 
-const handleKeydown = (event) => {
+const onDocumentKeydown = (event) => {
   if (isEscapeKey(event)) {
     event.preventDefault();
     closeModal();
   }
 };
 
-const handleCloseButtonClick = (event) => {
+const onCloseButtonClick = (event) => {
   event.preventDefault();
   closeModal();
 };
@@ -63,8 +63,8 @@ const openPictureModal = (url, description, likes, comments) => {
   modalElement?.classList.remove('hidden');
   bodyElement?.classList.add('modal-open');
 
-  closeButtonElement?.addEventListener('click', handleCloseButtonClick, {signal});
-  document.addEventListener('keydown', handleKeydown, {signal});
+  closeButtonElement?.addEventListener('click', onCloseButtonClick, {signal});
+  document.addEventListener('keydown', onDocumentKeydown, {signal});
 };
 
 export const initPictureModal = (pictures) => {
